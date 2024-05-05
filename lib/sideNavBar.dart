@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 
 class sideNavBar extends StatelessWidget {
+  const sideNavBar({super.key});
+
   @override
   Widget build(BuildContext context) {
     return Drawer(
@@ -9,8 +11,8 @@ class sideNavBar extends StatelessWidget {
         padding: EdgeInsets.zero,
         children: [
           UserAccountsDrawerHeader(
-            accountName: Text('Name'),
-            accountEmail: Text('example@gmail.com'),
+            accountName: const Text('Name'),
+            accountEmail: const Text('example@gmail.com'),
             currentAccountPicture: CircleAvatar(
               child: ClipOval(
                 child: Image.network(
@@ -21,7 +23,7 @@ class sideNavBar extends StatelessWidget {
                 ),
               ),
             ),
-            decoration: BoxDecoration(
+            decoration: const BoxDecoration(
               color: Colors.blue,
               image: DecorationImage(
                 fit: BoxFit.fill,

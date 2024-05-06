@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 
-class sideNavBar extends StatelessWidget {
-  const sideNavBar({super.key});
-
+class navBar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Drawer(
@@ -30,6 +28,21 @@ class sideNavBar extends StatelessWidget {
                 image: NetworkImage('https://oflutter.com/wp-content/uploads/2021/02/profile-bg3.jpg')
               ),
             ),
+          ),
+          ListTile(
+            leading: Icon(Icons.home),
+            title: Text('Home'),
+            onTap: () => null,
+          ),
+          ListTile(
+            leading: Icon(Icons.rate_review),
+            title: Text('My Reviews'),
+            onTap: () => null,
+          ),
+          ListTile(
+            leading: Icon(Icons.settings),
+            title: Text('Settings'),
+            onTap: () => null,
           ),
         ],
       ),

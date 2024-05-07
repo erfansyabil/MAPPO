@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 
 class navBar extends StatelessWidget {
+  const navBar({super.key});
+
   @override
   Widget build(BuildContext context) {
     return Drawer(
@@ -30,19 +32,19 @@ class navBar extends StatelessWidget {
             ),
           ),
           ListTile(
-            leading: Icon(Icons.home),
-            title: Text('Home'),
-            onTap: () => null,
+            leading: const Icon(Icons.home),
+            title: const Text('Home'),
+            onTap: () {},
           ),
           ListTile(
-            leading: Icon(Icons.rate_review),
-            title: Text('My Reviews'),
-            onTap: () => null,
+            leading: const Icon(Icons.rate_review),
+            title: const Text('My Reviews'),
+            onTap: () {},
           ),
           ListTile(
-            leading: Icon(Icons.settings),
-            title: Text('Settings'),
-            onTap: () => null,
+            leading: const Icon(Icons.settings),
+            title: const Text('Settings'),
+            onTap: () {},
           ),
         ],
       ),

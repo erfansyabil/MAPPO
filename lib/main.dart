@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'navBar.dart';
+import 'package:mappo/pages/login.dart';
+import 'pages/navBar.dart';
 
 void main() {
   runApp(const MyApp());
@@ -17,7 +18,7 @@ class MyApp extends StatelessWidget {
         colorScheme: ColorScheme.fromSeed(seedColor: const Color.fromARGB(255, 178, 255, 201)),
         useMaterial3: true,
       ),
-      home: const MyHomePage(title: 'MAPPO'),
+      home: LoginPage(),
     );
   }
 }

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:mappo/components/button.dart';
 import 'package:mappo/components/myTextField.dart';
+import 'package:mappo/components/squareTile.dart';
 
 class LoginPage extends StatelessWidget{
   LoginPage({super.key});
@@ -15,21 +16,21 @@ class LoginPage extends StatelessWidget{
   @override
   Widget build(BuildContext context){
     return Scaffold(
-      backgroundColor: Color.fromARGB(255, 203, 255, 168),
+      backgroundColor: Color.fromARGB(255, 174, 255, 216),
       body: SafeArea(
         child: Center(
           child: Column(
             children: [
-               SizedBox(height: 50),
+               const SizedBox(height: 50),
 
-               Icon(
+               const Icon(
                 Icons.lock,
                 size: 100,
                ),
 
-               SizedBox(height: 50),
+               const SizedBox(height: 50),
 
-               Text(
+               const Text(
                 'Login/Sign Up',
                 style: TextStyle(
                   color: Color.fromARGB(255, 0, 0, 0),
@@ -37,7 +38,7 @@ class LoginPage extends StatelessWidget{
                 ),
                ),
 
-               SizedBox(height: 25),
+               const SizedBox(height: 25),
 
                MyTextField(
                 controller: usernameController,
@@ -45,7 +46,7 @@ class LoginPage extends StatelessWidget{
                 obscureText: false,
                ),
 
-               SizedBox(height: 10),
+               const SizedBox(height: 10),
 
                MyTextField(
                 controller: passwordController,
@@ -53,9 +54,9 @@ class LoginPage extends StatelessWidget{
                 obscureText: true,
                ),
 
-               SizedBox(height: 10),
+               const SizedBox(height: 10),
 
-               Padding(
+               const Padding(
                  padding: const EdgeInsets.symmetric(horizontal: 25),
                  child: Row(
                   mainAxisAlignment: MainAxisAlignment.end,
@@ -71,10 +72,49 @@ class LoginPage extends StatelessWidget{
                  ),
                ),
 
-               SizedBox(height: 25),
+               const SizedBox(height: 25),
 
                MyButton(onTap: signIn
                ),
+
+               const SizedBox(height: 50),
+
+              const Padding(
+                padding: EdgeInsets.symmetric(horizontal: 25),
+                child: Row(
+                  children: [
+                    Expanded(
+                      child: Divider(
+                        thickness: 0.5,
+                        color: Color.fromARGB(255, 100, 100, 100),
+                        ),
+                        ),
+                        Padding(
+                          padding: EdgeInsets.symmetric(horizontal: 10),
+                          child: Text(
+                            'Or continue with',
+                            style: TextStyle(color: Color.fromARGB(255, 100, 100, 100))),
+                        ),
+                        Expanded
+                        (child: Divider(
+                          thickness: 0.5,
+                          color: Color.fromARGB(255, 100, 100, 100),
+                        )
+                        )
+                        ],
+                 ),
+              ),
+
+              const SizedBox(height: 50),
+
+              const Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  SquareTile(imagePath: 'lib/images/google.png'),
+                  SizedBox(width: 20,),
+                  SquareTile(imagePath: 'lib/images/apple.png'),
+                ],
+              ),
             ],),),)
     );
   }

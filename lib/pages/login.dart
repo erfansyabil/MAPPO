@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:mappo/components/button.dart';
 import 'package:mappo/components/myTextField.dart';
 import 'package:mappo/components/squareTile.dart';
+import 'package:mappo/pages/ForgotPassword.dart';
 import 'signup_page.dart'; // Import your sign-up page file
 
 class LoginPage extends StatelessWidget {
@@ -50,19 +51,26 @@ class LoginPage extends StatelessWidget {
                   obscureText: true,
                 ),
                 const SizedBox(height: 10),
-                const Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 25),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.end,
-                    children: [
-                      Text(
-                        'Forgot Password?',
-                        style: TextStyle(
-                          color: Color.fromARGB(255, 100, 100, 100),
-                          fontSize: 15,
+
+                InkWell(
+                  onTap: ()
+                  {
+                    Navigator.push(context, MaterialPageRoute(builder: (context)=>ForgotPassword()));
+                  },
+                  child: const Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 25),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.end,
+                      children: [
+                        Text(
+                          'Forgot Password?',
+                          style: TextStyle(
+                            color: Color.fromARGB(255, 100, 100, 100),
+                            fontSize: 15,
+                          ),
                         ),
-                      ),
-                    ],
+                      ],
+                    ),
                   ),
                 ),
                 const SizedBox(height: 25),

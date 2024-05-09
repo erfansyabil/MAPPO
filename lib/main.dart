@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:mappo/pages/login.dart';
+import 'pages/signup_page.dart'; // Import your sign-up page file
 import 'pages/navBar.dart';
 
 void main() {
@@ -19,7 +20,14 @@ class MyApp extends StatelessWidget {
         useMaterial3: true,
       ),
       home: LoginPage(),
+      routes: {
+
+        '/signup': (context) => SignUpPage(), // Define the '/signup' route
+        // Add other routes if needed
+      },
+
     );
+
   }
 }
 

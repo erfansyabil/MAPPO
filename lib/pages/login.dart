@@ -13,6 +13,16 @@ class LoginPage extends StatelessWidget {
 
   void signIn() {}
 
+  void signInWithGoogle(BuildContext context) {
+    // Add logic to sign in with Google
+    print("Signing in with Google...");
+  }
+
+  void signInWithApple(BuildContext context) {
+    // Add logic to sign in with Apple
+    print("Signing in with Apple...");
+  }
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -53,8 +63,7 @@ class LoginPage extends StatelessWidget {
                 const SizedBox(height: 10),
 
                 InkWell(
-                  onTap: ()
-                  {
+                  onTap: () {
                     Navigator.push(context, MaterialPageRoute(builder: (context)=>ForgotPassword()));
                   },
                   child: const Padding(
@@ -128,9 +137,19 @@ class LoginPage extends StatelessWidget {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    SquareTile(imagePath: 'lib/images/google.png'),
+                    InkWell(
+                      onTap: () {
+                        signInWithGoogle(context);
+                      },
+                      child: SquareTile(imagePath: 'lib/images/google.png'),
+                    ),
                     SizedBox(width: 20,),
-                    SquareTile(imagePath: 'lib/images/apple.png'),
+                    InkWell(
+                      onTap: () {
+                        signInWithApple(context);
+                      },
+                      child: SquareTile(imagePath: 'lib/images/apple.png'),
+                    ),
                   ],
                 ),
               ],

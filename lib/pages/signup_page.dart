@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 class SignUpPage extends StatelessWidget {
+  final TextEditingController usernameController = TextEditingController();
   final TextEditingController emailController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
 
@@ -18,7 +19,16 @@ class SignUpPage extends StatelessWidget {
           children: <Widget>[
             Image.asset(
               'lib/images/mappo.png',
-              height: 150,
+              height: 100,
+            ),
+            SizedBox(height: 20),
+            TextField(
+              controller: usernameController,
+              decoration: InputDecoration(
+                labelText: 'Username',
+                border: OutlineInputBorder(),
+                prefixIcon: Icon(Icons.person),
+              ),
             ),
             SizedBox(height: 20),
             TextField(

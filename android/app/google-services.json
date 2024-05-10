@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "767983175174",
+    "project_id": "mappo-83dc8",
+    "storage_bucket": "mappo-83dc8.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:767983175174:android:0bc01966be6b4f654fa587",
+        "android_client_info": {
+          "package_name": "com.example.mappo"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCQ5o5cQKdl7RkvD2VcjxIGa4CECmZGtbI"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

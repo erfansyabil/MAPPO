@@ -1,3 +1,5 @@
+// ignore_for_file: file_names
+
 import 'package:flutter/material.dart';
 
 class SquareTile extends StatelessWidget{
@@ -12,9 +14,9 @@ class SquareTile extends StatelessWidget{
     return Container(
       padding: const EdgeInsets.all(20),
       decoration: BoxDecoration(
-        border: Border.all(color: Color.fromARGB(255, 255, 255, 255)),
+        border: Border.all(color: const Color.fromARGB(255, 255, 255, 255)),
         borderRadius: BorderRadius.circular(16),
-        color: Color.fromARGB(255, 172, 136, 135)
+        color: const Color.fromARGB(255, 172, 136, 135)
       ),
       child: Image.asset(
         imagePath,

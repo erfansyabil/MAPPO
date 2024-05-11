@@ -30,7 +30,7 @@ class LoginPage extends StatelessWidget {
         '/signup': (context) => SignUpPage(), // Define the '/signup' route
       },
       home: Scaffold(
-        backgroundColor: Color.fromARGB(255, 174, 255, 216),
+        backgroundColor: const Color.fromARGB(255, 174, 255, 216),
         body: SafeArea(
           child: Center(
             child: Column(
@@ -67,7 +67,7 @@ class LoginPage extends StatelessWidget {
                     Navigator.push(context, MaterialPageRoute(builder: (context)=>ForgotPassword()));
                   },
                   child: const Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 25),
+                    padding: EdgeInsets.symmetric(horizontal: 25),
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.end,
                       children: [
@@ -91,7 +91,7 @@ class LoginPage extends StatelessWidget {
                     Navigator.pushNamed(context, '/signup');
                   },
                   child: const Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 25),
+                    padding: EdgeInsets.symmetric(horizontal: 25),
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.end,
                       children: [
@@ -141,14 +141,14 @@ class LoginPage extends StatelessWidget {
                       onTap: () {
                         signInWithGoogle(context);
                       },
-                      child: SquareTile(imagePath: 'lib/images/google.png'),
+                      child: const SquareTile(imagePath: 'lib/images/google.png'),
                     ),
-                    SizedBox(width: 20,),
+                    const SizedBox(width: 20,),
                     InkWell(
                       onTap: () {
                         signInWithApple(context);
                       },
-                      child: SquareTile(imagePath: 'lib/images/apple.png'),
+                      child: const SquareTile(imagePath: 'lib/images/apple.png'),
                     ),
                   ],
                 ),

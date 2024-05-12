@@ -15,15 +15,30 @@ class AuthPage extends StatelessWidget{
         builder:(context, snapshot){
           //user is logged in
           if(snapshot.hasData){
-            return HomePage();
+            return const HomePage();
           }
 
           //usr not logged in
           else{
-            return LoginPage();
+            return const LoginPage();
           }
         }
         ),
     );
+  }
+}
+
+class FirebaseAuthService{
+  final FirebaseAuth _auth = FirebaseAuth.instance;
+
+  Future<User?> signUpWithEmailAndPassword(String email,String password) async{
+
+    try{
+      UserCredential credential =await _auth.createUserWithEmailAndPassword(email: email, password: password);
+          return credential.user;
+    }catch(e){
+      print("Some error occured");
+    }
+
   }
 }

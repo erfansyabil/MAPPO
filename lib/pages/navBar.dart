@@ -2,7 +2,9 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
 class navBar extends StatelessWidget {
-  const navBar({super.key});
+  navBar({super.key});
+
+  final user = FirebaseAuth.instance.currentUser!;
 
   void signUserOut(){
     FirebaseAuth.instance.signOut();
@@ -17,7 +19,7 @@ class navBar extends StatelessWidget {
         children: [
           UserAccountsDrawerHeader(
             accountName: const Text('Name'),
-            accountEmail: const Text('example@gmail.com'),
+            accountEmail: Text('Welcome ${user.email!}'),
             currentAccountPicture: CircleAvatar(
               child: ClipOval(
                 child: Image.network(

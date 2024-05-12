@@ -6,19 +6,73 @@ import 'package:mappo/components/squareTile.dart';
 import 'package:mappo/pages/ForgotPassword.dart';
 import 'signup_page.dart'; // Import your sign-up page file
 
-class LoginPage extends StatelessWidget {
-  LoginPage({super.key});
+class LoginPage extends StatefulWidget {
+  const LoginPage({super.key});
 
+  @override
+  State<LoginPage> createState() => _LoginPageState();
+}
+
+class _LoginPageState extends State<LoginPage> {
   final emailController = TextEditingController();
+
   final passwordController = TextEditingController();
 
   void signIn() async {
-    await FirebaseAuth.instance.signInWithEmailAndPassword(
-      email: emailController.text, 
-      password: passwordController.text
-      );
+    showDialog(
+      context: context, 
+      builder: (context){
+        return const Center(
+          child: CircularProgressIndicator()
+        );
+      },
+    );
 
-  }
+    try {
+      await FirebaseAuth.instance.signInWithEmailAndPassword(
+        email: emailController.text, 
+        password: passwordController.text
+        );
+
+        await Future.delayed(const Duration(seconds: 1));
+        if (!context.mounted) return;
+        Navigator.of(context).pop();
+
+        } on FirebaseAuthException catch (e) {
+          
+          await Future.delayed(const Duration(seconds: 1));
+          if (!context.mounted) return;
+          Navigator.of(context).pop();
+
+          if (e.code == 'user-not-found'){
+            wrongEmailMessage();
+            } else if (e.code == 'wrong-password'){
+              wrongPasswordMessage();
+              }
+        }
+      }
+
+      void wrongEmailMessage(){
+        showDialog(
+          context: context, 
+          builder: (context){
+            return const AlertDialog(
+              title: Text('Incorrect Email',),
+              );
+          }
+          );
+      }
+
+      void wrongPasswordMessage(){
+        showDialog(
+          context: context, 
+          builder: (context){
+            return const AlertDialog(
+              title: Text('Incorrect Password',),
+              );
+          }
+          );
+      }
 
   void signInWithGoogle(BuildContext context) {
     // Add logic to sign in with Google

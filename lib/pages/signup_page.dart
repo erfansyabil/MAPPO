@@ -1,11 +1,31 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:mappo/pages/signupauth.dart';
 
-class SignUpPage extends StatelessWidget {
-  final TextEditingController usernameController = TextEditingController();
-  final TextEditingController emailController = TextEditingController();
-  final TextEditingController passwordController = TextEditingController();
+class SignUpPage extends StatefulWidget {
 
   SignUpPage({super.key});
+
+  @override
+  State<SignUpPage> createState() => _SignUpPageState();
+}
+
+class _SignUpPageState extends State<SignUpPage> {
+
+  final FirebaseAuthService _auth = FirebaseAuthService();
+  final TextEditingController usernameController = TextEditingController();
+
+  final TextEditingController emailController = TextEditingController();
+
+  final TextEditingController passwordController = TextEditingController();
+
+  @override
+  void dispose(){
+    usernameController.dispose();
+    emailController.dispose();
+    passwordController.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -53,9 +73,8 @@ class SignUpPage extends StatelessWidget {
             ),
             const SizedBox(height: 20),
             ElevatedButton(
-              onPressed: () {
-                // Add sign-up logic here
-              },
+              onPressed: _signup,
+
               child: const Text('Sign Up'),
             ),
             const SizedBox(height: 20),
@@ -80,5 +99,20 @@ class SignUpPage extends StatelessWidget {
         ),
       ),
     );
+  }
+  void _signup() async{
+    String username = usernameController.text;
+    String email = emailController.text;
+    String password = passwordController.text;
+
+    User? user = await _auth.signUpWithEmailAndPassword(email, password);
+
+    if(user != null){
+      print("User is successfully created");
+      Navigator.pushNamed(context, '/home');
+    }else{
+      print("Some error happened");
+    }
+
   }
 }

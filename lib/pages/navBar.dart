@@ -3,7 +3,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:mappo/pages/profile.dart'; // Import your profile.dart file
 
 class navBar extends StatelessWidget {
-  navBar({Key? key});
+  const navBar({super.key,});
 
   void signUserOut() {
     FirebaseAuth.instance.signOut();
@@ -14,6 +14,7 @@ class navBar extends StatelessWidget {
     final User? user = FirebaseAuth.instance.currentUser;
 
     return Drawer(
+      backgroundColor: const Color.fromARGB(255, 138, 255, 193),
       child: ListView(
         padding: EdgeInsets.zero,
         children: [
@@ -26,7 +27,7 @@ class navBar extends StatelessWidget {
                     'https://oflutter.com/wp-content/uploads/2021/02/girl-profile.png',
               ),
             ),
-            decoration: BoxDecoration(
+            decoration: const BoxDecoration(
               color: Colors.blue,
               image: DecorationImage(
                 fit: BoxFit.fill,

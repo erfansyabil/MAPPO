@@ -2,9 +2,8 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:mappo/components/button.dart';
 import 'package:mappo/components/myTextField.dart';
-import 'package:mappo/components/squareTile.dart';
 import 'package:mappo/pages/ForgotPassword.dart';
-import 'signup_page.dart'; // Import your sign-up page file
+import 'signup.dart'; // Import your sign-up page file
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
@@ -17,6 +16,8 @@ class _LoginPageState extends State<LoginPage> {
 
   final emailController = TextEditingController();
   final passwordController = TextEditingController();
+
+  bool _isEmailValid = true;
 
   void signIn() async {
     showDialog(
@@ -85,7 +86,7 @@ class _LoginPageState extends State<LoginPage> {
   Widget build(BuildContext context) {
     return MaterialApp(
       routes: {
-        '/signup': (context) => SignUpPage(), // Define the '/signup' route
+        '/signup': (context) => const SignUpPage(), // Define the '/signup' route
       },
       home: Scaffold(
         backgroundColor: const Color.fromARGB(255, 174, 255, 216),
@@ -94,11 +95,11 @@ class _LoginPageState extends State<LoginPage> {
             child: Column(
               children: [
                 const SizedBox(height: 50),
-                const Icon(
-                  Icons.lock,
-                  size: 100,
-                ),
-                const SizedBox(height: 50),
+                Image.asset(
+                  'lib/images/mappo.png',
+                  height: 150,
+                  ),
+                const SizedBox(height: 20),
                 const Text(
                   'Login',
                   style: TextStyle(
@@ -111,12 +112,14 @@ class _LoginPageState extends State<LoginPage> {
                   controller: emailController,
                   hintText: 'Email',
                   obscureText: false,
+                  icon: const Icon(Icons.email),
                 ),
                 const SizedBox(height: 10),
                 MyTextField(
                   controller: passwordController,
                   hintText: 'Password',
                   obscureText: true,
+                  icon: const Icon(Icons.lock),
                 ),
                 const SizedBox(height: 10),
 
@@ -140,8 +143,9 @@ class _LoginPageState extends State<LoginPage> {
                     ),
                   ),
                 ),
-                const SizedBox(height: 25),
+                const SizedBox(height: 20),
                 MyButton(
+                  text: "Sign In",
                   onTap: signIn,
                 ),
                 const SizedBox(height: 0),
@@ -165,52 +169,6 @@ class _LoginPageState extends State<LoginPage> {
                       ],
                     ),
                   ),
-                ),
-
-                const SizedBox(height: 50),
-                const Padding(
-                  padding: EdgeInsets.symmetric(horizontal: 25),
-                  child: Row(
-                    children: [
-                      Expanded(
-                        child: Divider(
-                          thickness: 0.5,
-                          color: Color.fromARGB(255, 100, 100, 100),
-                        ),
-                      ),
-                      Padding(
-                        padding: EdgeInsets.symmetric(horizontal: 10),
-                        child: Text(
-                            'Or continue with',
-                            style: TextStyle(color: Color.fromARGB(255, 100, 100, 100))),
-                      ),
-                      Expanded(
-                          child: Divider(
-                            thickness: 0.5,
-                            color: Color.fromARGB(255, 100, 100, 100),
-                          )
-                      )
-                    ],
-                  ),
-                ),
-                const SizedBox(height: 50),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    InkWell(
-                      onTap: () {
-                        signInWithGoogle(context);
-                      },
-                      child: const SquareTile(imagePath: 'lib/images/google.png'),
-                    ),
-                    const SizedBox(width: 20,),
-                    InkWell(
-                      onTap: () {
-                        signInWithApple(context);
-                      },
-                      child: const SquareTile(imagePath: 'lib/images/apple.png'),
-                    ),
-                  ],
                 ),
               ],
             ),

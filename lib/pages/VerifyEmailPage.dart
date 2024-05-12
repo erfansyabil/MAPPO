@@ -4,13 +4,13 @@ import 'package:firebase_auth/firebase_auth.dart';
 class VerifyEmailPage extends StatelessWidget {
   final User? user;
 
-  const VerifyEmailPage({Key? key, required this.user}) : super(key: key);
+  const VerifyEmailPage({super.key, required this.user});
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Verify Email'),
+        title: const Text('Verify Email'),
       ),
       body: Padding(
         padding: const EdgeInsets.all(20.0),
@@ -21,12 +21,12 @@ class VerifyEmailPage extends StatelessWidget {
               'A verification email has been sent to ${user!.email}. Please check your inbox and click the verification link to complete the registration process.',
               textAlign: TextAlign.center,
             ),
-            SizedBox(height: 20),
+            const SizedBox(height: 20),
             ElevatedButton(
               onPressed: () {
                 _sendEmailVerification(context);
               },
-              child: Text('Resend Verification Email'),
+              child: const Text('Resend Verification Email'),
             ),
           ],
         ),
@@ -38,7 +38,7 @@ class VerifyEmailPage extends StatelessWidget {
     try {
       await user!.sendEmailVerification();
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
+        const SnackBar(
           content: Text('Verification email resent.'),
           duration: Duration(seconds: 3),
         ),
@@ -46,7 +46,7 @@ class VerifyEmailPage extends StatelessWidget {
     } catch (e) {
       print('Error sending verification email: $e');
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
+        const SnackBar(
           content: Text('Failed to resend verification email. Please try again later.'),
           duration: Duration(seconds: 3),
         ),

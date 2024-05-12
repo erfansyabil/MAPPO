@@ -4,7 +4,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 class ForgotPassword extends StatelessWidget {
   final TextEditingController emailController = TextEditingController();
 
-  ForgotPassword({Key? key});
+  ForgotPassword({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -49,13 +49,13 @@ class ForgotPassword extends StatelessWidget {
     String email = emailController.text;
     try {
       await FirebaseAuth.instance.sendPasswordResetEmail(email: email);
-      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
         content: Text('Password reset email sent!'),
         duration: Duration(seconds: 3),
       ));
     } catch (e) {
       print('Failed to send reset email: $e');
-      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
         content: Text('Failed to send reset email. Please try again later.'),
         duration: Duration(seconds: 3),
       ));

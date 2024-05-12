@@ -2,7 +2,13 @@ import 'package:flutter/material.dart';
 
 class MyButton extends StatelessWidget{
   final Function()? onTap;
-  const MyButton({super.key, required this.onTap});
+  final String text;
+  const MyButton(
+    {
+      super.key, 
+      required this.onTap,
+      required this.text
+      });
   @override
   Widget build(BuildContext context){
     return GestureDetector(
@@ -14,9 +20,9 @@ class MyButton extends StatelessWidget{
           color: const Color.fromARGB(255, 172, 136, 135),
           borderRadius: BorderRadius.circular(8),
         ),
-        child: const Center(
+        child: Center(
           child: Text(
-            "Sign In",
+            text,
             style: TextStyle(color: Color.fromARGB(255, 255, 255, 255)),),),
       ),
     );

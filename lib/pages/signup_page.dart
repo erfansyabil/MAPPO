@@ -1,26 +1,22 @@
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:mappo/pages/signupauth.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'VerifyEmailPage.dart'; // Import the VerifyEmailPage
 
 class SignUpPage extends StatefulWidget {
-
-  SignUpPage({super.key});
+  SignUpPage({Key? key}) : super(key: key);
 
   @override
   State<SignUpPage> createState() => _SignUpPageState();
 }
 
 class _SignUpPageState extends State<SignUpPage> {
-
-  final FirebaseAuthService _auth = FirebaseAuthService();
+  final FirebaseAuth _auth = FirebaseAuth.instance;
   final TextEditingController usernameController = TextEditingController();
-
   final TextEditingController emailController = TextEditingController();
-
   final TextEditingController passwordController = TextEditingController();
 
   @override
-  void dispose(){
+  void dispose() {
     usernameController.dispose();
     emailController.dispose();
     passwordController.dispose();
@@ -74,7 +70,6 @@ class _SignUpPageState extends State<SignUpPage> {
             const SizedBox(height: 20),
             ElevatedButton(
               onPressed: _signup,
-
               child: const Text('Sign Up'),
             ),
             const SizedBox(height: 20),
@@ -100,19 +95,31 @@ class _SignUpPageState extends State<SignUpPage> {
       ),
     );
   }
-  void _signup() async{
+
+  void _signup() async {
     String username = usernameController.text;
     String email = emailController.text;
     String password = passwordController.text;
 
-    User? user = await _auth.signUpWithEmailAndPassword(email, password);
+    try {
+      UserCredential userCredential = await _auth.createUserWithEmailAndPassword(
+        email: email,
+        password: password,
+      );
 
-    if(user != null){
-      print("User is successfully created");
-      Navigator.pushNamed(context, '/home');
-    }else{
-      print("Some error happened");
+      // Send verification email
+      await userCredential.user!.sendEmailVerification();
+
+      // Navigate to VerifyEmailPage after successful sign up
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(
+          builder: (context) => VerifyEmailPage(user: userCredential.user),
+        ),
+      );
+    } catch (e) {
+      print('Error signing up: $e');
+      // Handle sign-up error, e.g., display an error message to the user
     }
-
   }
 }

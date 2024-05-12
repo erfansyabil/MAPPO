@@ -1,57 +1,70 @@
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:mappo/pages/profile.dart'; // Import your profile.dart file
 
 class navBar extends StatelessWidget {
-  navBar({super.key});
+  navBar({Key? key});
 
-  final user = FirebaseAuth.instance.currentUser!;
-
-  void signUserOut(){
+  void signUserOut() {
     FirebaseAuth.instance.signOut();
   }
 
   @override
   Widget build(BuildContext context) {
+    final User? user = FirebaseAuth.instance.currentUser;
+
     return Drawer(
       child: ListView(
-        // Remove padding
         padding: EdgeInsets.zero,
         children: [
           UserAccountsDrawerHeader(
-            accountName: const Text('Name'),
-            accountEmail: Text('Welcome ${user.email!}'),
+            accountName: Text(user?.displayName ?? 'Name'),
+            accountEmail: Text('Welcome ${user?.email ?? 'User'}'),
             currentAccountPicture: CircleAvatar(
-              child: ClipOval(
-                child: Image.network(
-                  'https://oflutter.com/wp-content/uploads/2021/02/girl-profile.png',
-                  fit: BoxFit.cover,
-                  width: 90,
-                  height: 90,
-                ),
+              backgroundImage: NetworkImage(
+                user?.photoURL ??
+                    'https://oflutter.com/wp-content/uploads/2021/02/girl-profile.png',
               ),
             ),
-            decoration: const BoxDecoration(
+            decoration: BoxDecoration(
               color: Colors.blue,
               image: DecorationImage(
                 fit: BoxFit.fill,
-                image: NetworkImage('https://oflutter.com/wp-content/uploads/2021/02/profile-bg3.jpg')
+                image: NetworkImage(
+                    'https://oflutter.com/wp-content/uploads/2021/02/profile-bg3.jpg'),
               ),
             ),
           ),
           ListTile(
             leading: const Icon(Icons.home),
             title: const Text('Home'),
-            onTap: () {},
+            onTap: () {
+              // Handle home navigation
+            },
           ),
           ListTile(
             leading: const Icon(Icons.rate_review),
             title: const Text('My Reviews'),
-            onTap: () {},
+            onTap: () {
+              // Handle my reviews navigation
+            },
           ),
           ListTile(
             leading: const Icon(Icons.settings),
             title: const Text('Settings'),
-            onTap: () {},
+            onTap: () {
+              // Handle settings navigation
+            },
+          ),
+          ListTile(
+            leading: const Icon(Icons.person),
+            title: const Text('Profile'),
+            onTap: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => ProfilePage()),
+              );
+            },
           ),
           ListTile(
             leading: const Icon(Icons.logout),

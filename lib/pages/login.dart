@@ -33,15 +33,11 @@ class _LoginPageState extends State<LoginPage> {
         email: emailController.text, 
         password: passwordController.text
         );
-
-        await Future.delayed(const Duration(seconds: 1));
-        if (!mounted) return;
+        
         Navigator.of(context).pop();
 
         } on FirebaseAuthException catch (e) {
           
-          await Future.delayed(const Duration(seconds: 1));
-          if (!mounted) return;
           Navigator.of(context).pop();
 
           if (e.code == 'invalid-email'){

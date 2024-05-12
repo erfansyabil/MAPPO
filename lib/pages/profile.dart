@@ -3,10 +3,14 @@ import 'package:firebase_auth/firebase_auth.dart';
 
 class ProfilePage extends StatelessWidget {
   final TextEditingController emailController = TextEditingController();
+  final TextEditingController usernameController = TextEditingController();
+  final TextEditingController passwordController = TextEditingController();
 
   ProfilePage() {
     User? user = FirebaseAuth.instance.currentUser;
     emailController.text = user?.email ?? '';
+    //usernameController.text = user?.username ?? '';
+    //passwordController.text = user?.password ?? '';
   }
 
   @override
@@ -21,9 +25,19 @@ class ProfilePage extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
             Image.asset(
-              'lib/images/mappo.png',
+              'lib/images/user.jpeg',
               height: 200,
             ),
+            const SizedBox(height: 20),
+            TextField(
+              controller: usernameController,
+              decoration: InputDecoration(
+                labelText: 'Name',
+                border: OutlineInputBorder(),
+                prefixIcon: Icon(Icons.person_outline_outlined),
+              ),
+            ),
+
             const SizedBox(height: 20),
             TextField(
               controller: emailController,
@@ -31,6 +45,26 @@ class ProfilePage extends StatelessWidget {
                 labelText: 'Email',
                 border: OutlineInputBorder(),
                 prefixIcon: Icon(Icons.email),
+              ),
+            ),
+
+            const SizedBox(height: 20),
+            TextField(
+              controller: emailController,
+              decoration: InputDecoration(
+                labelText: 'phone number',
+                border: OutlineInputBorder(),
+                prefixIcon: Icon(Icons.add_call),
+              ),
+            ),
+
+            const SizedBox(height: 20),
+            TextField(
+              controller: emailController,
+              decoration: InputDecoration(
+                labelText: 'password',
+                border: OutlineInputBorder(),
+                prefixIcon: Icon(Icons.remove_red_eye),
               ),
             ),
             const SizedBox(height: 20),
@@ -52,7 +86,7 @@ class ProfilePage extends StatelessWidget {
     try {
       await FirebaseAuth.instance.sendPasswordResetEmail(email: email);
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-        content: Text('Password reset email sent!'),
+        content: Text('Edit Profile'),
         duration: Duration(seconds: 3),
       ));
     } catch (e) {

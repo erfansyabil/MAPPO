@@ -51,10 +51,6 @@ class ProfilePage extends StatelessWidget {
 
             const SizedBox(height: 20),
             TextField(
-<<<<<<< HEAD
-              controller: passwordController,
-              decoration: InputDecoration(
-=======
               controller: emailController,
               decoration: const InputDecoration(
                 labelText: 'phone number',
@@ -67,7 +63,6 @@ class ProfilePage extends StatelessWidget {
             TextField(
               controller: emailController,
               decoration: const InputDecoration(
->>>>>>> 16187dfe2d44684ea68bf816f78c962ad1290ecb
                 labelText: 'password',
                 border: OutlineInputBorder(),
                 prefixIcon: Icon(Icons.remove_red_eye),
@@ -112,11 +107,14 @@ class ProfilePage extends StatelessWidget {
       await FirebaseAuth.instance.sendPasswordResetEmail(email: email);
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(
         content: Text('Delete account'),
+
+      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+        content: Text('Edit Profile'),
         duration: Duration(seconds: 3),
       ));
     } catch (e) {
       print('Failed to send reset email: $e');
-      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
         content: Text('Failed to send reset email. Please try again later.'),
         duration: Duration(seconds: 3),
       ));

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:mappo/pages/signupauth.dart';
 import 'VerifyEmailPage.dart'; // Import the VerifyEmailPage
 
 class SignUpPage extends StatefulWidget {
@@ -14,6 +15,8 @@ class _SignUpPageState extends State<SignUpPage> {
   final TextEditingController usernameController = TextEditingController();
   final TextEditingController emailController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
+
+  bool _isEmailValid = true;
 
   @override
   void dispose() {
@@ -51,11 +54,17 @@ class _SignUpPageState extends State<SignUpPage> {
             const SizedBox(height: 20),
             TextField(
               controller: emailController,
-              decoration: const InputDecoration(
+              decoration: InputDecoration(
                 labelText: 'Email',
                 border: OutlineInputBorder(),
                 prefixIcon: Icon(Icons.email),
+                errorText: _isEmailValid ? null : 'Invalid email format',
               ),
+              onChanged: (_) {
+                setState(() {
+                  _isEmailValid = _isValidEmail(emailController.text);
+                });
+              },
             ),
             const SizedBox(height: 20),
             TextField(
@@ -69,7 +78,7 @@ class _SignUpPageState extends State<SignUpPage> {
             ),
             const SizedBox(height: 20),
             ElevatedButton(
-              onPressed: _signup,
+              onPressed: _isEmailValid ? _signup : null,
               child: const Text('Sign Up'),
             ),
             const SizedBox(height: 20),
@@ -121,5 +130,10 @@ class _SignUpPageState extends State<SignUpPage> {
       print('Error signing up: $e');
       // Handle sign-up error, e.g., display an error message to the user
     }
+  }
+
+  bool _isValidEmail(String email) {
+    final emailRegex = RegExp(r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$');
+    return emailRegex.hasMatch(email);
   }
 }

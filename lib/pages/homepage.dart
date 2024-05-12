@@ -8,8 +8,11 @@ class HomePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      drawer: navBar(),
+      backgroundColor: const Color.fromARGB(255, 174, 255, 216),
+      drawer: const navBar(),
       appBar: AppBar(
+        backgroundColor: const Color.fromARGB(255, 174, 255, 216),
+        title: const Text('Home'),
       ),
       body: const Center(
         child: Column(

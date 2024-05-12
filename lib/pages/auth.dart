@@ -10,6 +10,7 @@ class AuthPage extends StatelessWidget{
   @override
   Widget build(BuildContext context){
     return Scaffold(
+      backgroundColor: const Color.fromARGB(255, 174, 255, 216),
       body: StreamBuilder<User?>(
         stream: FirebaseAuth.instance.authStateChanges(),
         builder:(context, snapshot){
@@ -39,6 +40,7 @@ class FirebaseAuthService{
     }catch(e){
       print("Some error occured");
     }
+    return null;
 
   }
 }

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:mappo/pages/auth.dart';
 import 'package:mappo/pages/homepage.dart';
-import 'pages/signup_page.dart'; // Import your sign-up page file
+import 'pages/signup.dart'; // Import your sign-up page file
 import 'package:firebase_core/firebase_core.dart';
 import 'firebase_options.dart';
 
@@ -25,17 +25,14 @@ class MyApp extends StatelessWidget {
         colorScheme: ColorScheme.fromSeed(seedColor: const Color.fromARGB(255, 178, 255, 201)),
         useMaterial3: true,
       ),
-      home: AuthPage(),
+      home: const AuthPage(),
       routes: {
 
-        '/signup': (context) => SignUpPage(), // Define the '/signup' route
+        '/signup': (context) => const SignUpPage(), // Define the '/signup' route
         '/home': (context) => const HomePage(),
         // Add other routes if needed
       },
-
     );
 
   }
 }
-
-

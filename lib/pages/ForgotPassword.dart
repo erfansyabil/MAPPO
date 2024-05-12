@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
 class ForgotPassword extends StatelessWidget {
-  final TextEditingController usernameController = TextEditingController();
-  final TextEditingController newPasswordController = TextEditingController();
+  final TextEditingController emailController = TextEditingController();
 
-  ForgotPassword({super.key});
+  ForgotPassword({Key? key});
 
   @override
   Widget build(BuildContext context) {
@@ -24,36 +24,41 @@ class ForgotPassword extends StatelessWidget {
             ),
             const SizedBox(height: 20),
             TextField(
-              controller: usernameController,
+              controller: emailController,
               decoration: const InputDecoration(
-                labelText: 'Username',
+                labelText: 'Email',
                 border: OutlineInputBorder(),
-                prefixIcon: Icon(Icons.person),
+                prefixIcon: Icon(Icons.email),
               ),
-            ),
-            const SizedBox(height: 20),
-            TextField(
-              controller: newPasswordController,
-              decoration: const InputDecoration(
-                labelText: 'New Password',
-                border: OutlineInputBorder(),
-                prefixIcon: Icon(Icons.lock),
-              ),
-              obscureText: true,
             ),
             const SizedBox(height: 20),
             ElevatedButton(
-
               onPressed: () {
-                //insert
+                resetPassword(context);
               },
-              child: const Text('Update Password'),
+              child: const Text('Reset Password'),
             ),
             const SizedBox(height: 20),
-
           ],
         ),
       ),
     );
+  }
+
+  void resetPassword(BuildContext context) async {
+    String email = emailController.text;
+    try {
+      await FirebaseAuth.instance.sendPasswordResetEmail(email: email);
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+        content: Text('Password reset email sent!'),
+        duration: Duration(seconds: 3),
+      ));
+    } catch (e) {
+      print('Failed to send reset email: $e');
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+        content: Text('Failed to send reset email. Please try again later.'),
+        duration: Duration(seconds: 3),
+      ));
+    }
   }
 }

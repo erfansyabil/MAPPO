@@ -14,8 +14,8 @@ class LoginPage extends StatefulWidget {
 }
 
 class _LoginPageState extends State<LoginPage> {
-  final emailController = TextEditingController();
 
+  final emailController = TextEditingController();
   final passwordController = TextEditingController();
 
   void signIn() async {
@@ -35,18 +35,18 @@ class _LoginPageState extends State<LoginPage> {
         );
 
         await Future.delayed(const Duration(seconds: 1));
-        if (!context.mounted) return;
+        if (!mounted) return;
         Navigator.of(context).pop();
 
         } on FirebaseAuthException catch (e) {
           
           await Future.delayed(const Duration(seconds: 1));
-          if (!context.mounted) return;
+          if (!mounted) return;
           Navigator.of(context).pop();
 
-          if (e.code == 'user-not-found'){
+          if (e.code == 'invalid-email'){
             wrongEmailMessage();
-            } else if (e.code == 'wrong-password'){
+            } else if (e.code == 'invalid-credential'){
               wrongPasswordMessage();
               }
         }
@@ -58,6 +58,7 @@ class _LoginPageState extends State<LoginPage> {
           builder: (context){
             return const AlertDialog(
               title: Text('Incorrect Email',),
+              
               );
           }
           );
@@ -68,7 +69,7 @@ class _LoginPageState extends State<LoginPage> {
           context: context, 
           builder: (context){
             return const AlertDialog(
-              title: Text('Incorrect Password',),
+              title: Text('Incorrect Password'),
               );
           }
           );
@@ -144,7 +145,9 @@ class _LoginPageState extends State<LoginPage> {
                   ),
                 ),
                 const SizedBox(height: 25),
-                MyButton(onTap: signIn),
+                MyButton(
+                  onTap: signIn,
+                ),
                 const SizedBox(height: 0),
                 TextButton(
                   onPressed: () {

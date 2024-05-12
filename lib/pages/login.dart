@@ -1,3 +1,4 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:mappo/components/button.dart';
 import 'package:mappo/components/myTextField.dart';
@@ -8,10 +9,16 @@ import 'signup_page.dart'; // Import your sign-up page file
 class LoginPage extends StatelessWidget {
   LoginPage({super.key});
 
-  final usernameController = TextEditingController();
+  final emailController = TextEditingController();
   final passwordController = TextEditingController();
 
-  void signIn() {}
+  void signIn() async {
+    await FirebaseAuth.instance.signInWithEmailAndPassword(
+      email: emailController.text, 
+      password: passwordController.text
+      );
+
+  }
 
   void signInWithGoogle(BuildContext context) {
     // Add logic to sign in with Google
@@ -50,8 +57,8 @@ class LoginPage extends StatelessWidget {
                 ),
                 const SizedBox(height: 25),
                 MyTextField(
-                  controller: usernameController,
-                  hintText: 'Username',
+                  controller: emailController,
+                  hintText: 'Email',
                   obscureText: false,
                 ),
                 const SizedBox(height: 10),

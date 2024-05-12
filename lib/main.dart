@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:mappo/pages/login.dart';
+import 'package:mappo/pages/auth.dart';
 import 'pages/signup_page.dart'; // Import your sign-up page file
-import 'pages/navBar.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'firebase_options.dart';
 
@@ -25,7 +24,7 @@ class MyApp extends StatelessWidget {
         colorScheme: ColorScheme.fromSeed(seedColor: const Color.fromARGB(255, 178, 255, 201)),
         useMaterial3: true,
       ),
-      home: LoginPage(),
+      home: AuthPage(),
       routes: {
 
         '/signup': (context) => SignUpPage(), // Define the '/signup' route
@@ -37,33 +36,4 @@ class MyApp extends StatelessWidget {
   }
 }
 
-class MyHomePage extends StatefulWidget {
-  const MyHomePage({super.key, required this.title});
-  final String title;
 
-  @override
-  State<MyHomePage> createState() => _MyHomePageState();
-}
-
-class _MyHomePageState extends State<MyHomePage> {
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      drawer: const navBar(),
-      appBar: AppBar(
-        title: Text(widget.title),
-      ),
-      body: const Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            Text(
-              'Homepage',
-            ),
-          ],
-        ),
-      ), // This trailing comma makes auto-formatting nicer for build methods.
-    );
-  }
-}

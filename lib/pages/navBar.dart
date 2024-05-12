@@ -1,7 +1,12 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
 class navBar extends StatelessWidget {
   const navBar({super.key});
+
+  void signUserOut(){
+    FirebaseAuth.instance.signOut();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -45,6 +50,11 @@ class navBar extends StatelessWidget {
             leading: const Icon(Icons.settings),
             title: const Text('Settings'),
             onTap: () {},
+          ),
+          ListTile(
+            leading: const Icon(Icons.logout),
+            title: const Text('Log Out'),
+            onTap: signUserOut,
           ),
         ],
       ),

@@ -30,9 +30,9 @@ class _SignUpPageState extends State<SignUpPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color.fromARGB(255, 174, 255, 216),
+      backgroundColor: Color.fromARGB(255, 255, 255, 255),
       appBar: AppBar(
-        backgroundColor: const Color.fromARGB(255, 174, 255, 216),
+        backgroundColor: Color.fromARGB(255, 255, 255, 255),
         title: const Text('Sign Up'),
       ),
       body: Padding(
@@ -54,12 +54,12 @@ class _SignUpPageState extends State<SignUpPage> {
                   border: OutlineInputBorder(),
                   prefixIcon: Icon(Icons.person),
                   enabledBorder: OutlineInputBorder(
-                      borderSide: BorderSide(color: Color.fromARGB(255, 172, 136, 135)),
+                      borderSide: BorderSide(color: Color.fromARGB(255, 0, 0, 0)),
                       ),
                       focusedBorder: OutlineInputBorder(
-                        borderSide: BorderSide(color: Color.fromARGB(255, 138, 255, 193))
+                        borderSide: BorderSide(color: Color.fromARGB(255, 255, 0, 0))
                         ),
-                        fillColor: Color.fromARGB(255, 138, 255, 193),
+                        fillColor: Color.fromARGB(255, 255, 246, 164),
                         filled: true,
                     ),
               ),
@@ -75,12 +75,12 @@ class _SignUpPageState extends State<SignUpPage> {
                   prefixIcon: const Icon(Icons.email),
                   errorText: _isEmailValid ? null : 'Invalid email format',
                   enabledBorder: const OutlineInputBorder(
-                    borderSide: BorderSide(color: Color.fromARGB(255, 172, 136, 135)),
+                    borderSide: BorderSide(color: Color.fromARGB(255, 0, 0, 0)),
                     ),
                     focusedBorder: const OutlineInputBorder(
-                      borderSide: BorderSide(color: Color.fromARGB(255, 138, 255, 193))
+                      borderSide: BorderSide(color: Color.fromARGB(255, 255, 0, 0))
                       ),
-                      fillColor: const Color.fromARGB(255, 138, 255, 193),
+                      fillColor: const Color.fromARGB(255, 255, 246, 164),
                       filled: true,
                 ),
                 onChanged: (_) {
@@ -100,12 +100,12 @@ class _SignUpPageState extends State<SignUpPage> {
                   border: OutlineInputBorder(),
                   prefixIcon: Icon(Icons.lock),
                   enabledBorder: OutlineInputBorder(
-                    borderSide: BorderSide(color: Color.fromARGB(255, 172, 136, 135)),
+                    borderSide: BorderSide(color: Color.fromARGB(255, 0, 0, 0)),
                     ),
                     focusedBorder: OutlineInputBorder(
-                      borderSide: BorderSide(color: Color.fromARGB(255, 138, 255, 193))
+                      borderSide: BorderSide(color: Color.fromARGB(255, 255, 0, 0))
                       ),
-                      fillColor: Color.fromARGB(255, 138, 255, 193),
+                      fillColor: Color.fromARGB(255, 255, 246, 164),
                       filled: true,
                   ),
                 obscureText: true,

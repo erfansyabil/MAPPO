@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
 
 class MyTextField extends StatelessWidget{
-  final controller;
+  final TextEditingController controller;
   final String hintText;
   final bool obscureText;
   final Icon icon;
+
 
   const MyTextField({
     super.key,
@@ -21,19 +22,21 @@ class MyTextField extends StatelessWidget{
       child: TextField(
         controller: controller,
         obscureText: obscureText,
+        
         decoration: InputDecoration(
           prefixIcon: icon,
           enabledBorder: const OutlineInputBorder(
-            borderSide: BorderSide(color: Color.fromARGB(255, 172, 136, 135)),
+            borderSide: BorderSide(color: Color.fromARGB(255, 0, 0, 0)),
             ),
             focusedBorder: const OutlineInputBorder(
-              borderSide: BorderSide(color: Color.fromARGB(255, 138, 255, 193))
+              borderSide: BorderSide(color: Color.fromARGB(255, 255, 0, 0))
                     ),
-                    fillColor: const Color.fromARGB(255, 138, 255, 193),
+                    fillColor: Color.fromARGB(255, 255, 246, 164),                 
                     filled: true,
                     hintText: hintText,
                     ),
                   ),
+                  
     );
   }
 }

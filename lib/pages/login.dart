@@ -2,7 +2,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:mappo/components/button.dart';
 import 'package:mappo/components/myTextField.dart';
-import 'package:mappo/pages/ForgotPassword.dart';
+import 'package:mappo/pages/forgotpassword.dart';
 import 'signup.dart'; // Import your sign-up page file
 
 class LoginPage extends StatefulWidget {
@@ -16,7 +16,6 @@ class _LoginPageState extends State<LoginPage> {
 
   final emailController = TextEditingController();
   final passwordController = TextEditingController();
-
   bool _isEmailValid = true;
 
   void signIn() async {
@@ -70,17 +69,12 @@ class _LoginPageState extends State<LoginPage> {
               );
           }
           );
-      }
-
-  void signInWithGoogle(BuildContext context) {
-    // Add logic to sign in with Google
-    print("Signing in with Google...");
-  }
-
-  void signInWithApple(BuildContext context) {
-    // Add logic to sign in with Apple
-    print("Signing in with Apple...");
-  }
+          
+          bool _isValidEmail(String email) {
+            final emailRegex = RegExp(r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$');
+            return emailRegex.hasMatch(email);
+            }
+            }
 
   @override
   Widget build(BuildContext context) {
@@ -89,7 +83,7 @@ class _LoginPageState extends State<LoginPage> {
         '/signup': (context) => const SignUpPage(), // Define the '/signup' route
       },
       home: Scaffold(
-        backgroundColor: const Color.fromARGB(255, 174, 255, 216),
+        backgroundColor: Color.fromARGB(255, 255, 255, 255),
         body: SafeArea(
           child: Center(
             child: Column(
@@ -113,6 +107,7 @@ class _LoginPageState extends State<LoginPage> {
                   hintText: 'Email',
                   obscureText: false,
                   icon: const Icon(Icons.email),
+                  
                 ),
                 const SizedBox(height: 10),
                 MyTextField(

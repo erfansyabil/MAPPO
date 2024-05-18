@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:mappo/components/button.dart';
+import 'package:mappo/components/myTextField.dart';
 
 class ForgotPassword extends StatelessWidget {
   final TextEditingController emailController = TextEditingController();
@@ -9,35 +11,34 @@ class ForgotPassword extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color.fromARGB(255, 174, 255, 216),
+      backgroundColor: const Color.fromARGB(255, 255, 255, 255),
       appBar: AppBar(
         title: const Text('Forgot Password?'),
       ),
+      
       body: Padding(
         padding: const EdgeInsets.all(20.0),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
-            Image.asset(
-              'lib/images/forget.png',
-              height: 200,
+            const Icon(Icons.lock_outline_rounded,
+            size:200,
+            color: Color.fromARGB(255, 0, 0, 0),
             ),
             const SizedBox(height: 20),
-            TextField(
-              controller: emailController,
-              decoration: const InputDecoration(
-                labelText: 'Email',
-                border: OutlineInputBorder(),
-                prefixIcon: Icon(Icons.email),
+            MyTextField(
+              controller: emailController, 
+              hintText: 'Email', 
+              obscureText: false, 
+              icon: const Icon(Icons.email),
               ),
-            ),
             const SizedBox(height: 20),
-            ElevatedButton(
-              onPressed: () {
+            MyButton(
+              onTap: () {
                 resetPassword(context);
-              },
-              child: const Text('Reset Password'),
-            ),
+              }, 
+              text: 'Reset Password'
+              ),
             const SizedBox(height: 20),
           ],
         ),

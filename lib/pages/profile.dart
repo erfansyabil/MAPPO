@@ -82,6 +82,8 @@ class ProfilePage extends StatelessWidget {
     );
   }
 
+  //buttons nak tukar fucction laterrrrr
+
   void resetPassword(BuildContext context) async {
     String email = emailController.text;
     try {
@@ -98,4 +100,24 @@ class ProfilePage extends StatelessWidget {
       ));
     }
   }
+/* 
+  void resetPassword(BuildContext context) async {
+    String email = emailController.text;
+    try {
+      await FirebaseAuth.instance.sendPasswordResetEmail(email: email);
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+        content: Text('Delete account'),
+
+      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+        content: Text('Edit Profile'),
+        duration: Duration(seconds: 3),
+      ));
+    } catch (e) {
+      print('Failed to send reset email: $e');
+      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+        content: Text('Failed to send reset email. Please try again later.'),
+        duration: Duration(seconds: 3),
+      ));
+    }
+  }*/
 }

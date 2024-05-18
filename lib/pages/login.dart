@@ -19,6 +19,16 @@ class _LoginPageState extends State<LoginPage> {
   bool _isEmailValid = true;
 
   void signIn() async {
+    if (!_validateEmail(emailController.text)) {
+      setState(() {
+        _isEmailValid = false;
+      });
+      return;
+    } else {
+      setState(() {
+        _isEmailValid = true;
+      });
+    }
     showDialog(
       context: context, 
       builder: (context){
@@ -69,11 +79,11 @@ class _LoginPageState extends State<LoginPage> {
               );
           }
           );
+      }
           
-          bool _isValidEmail(String email) {
+          bool _validateEmail(String email) {
             final emailRegex = RegExp(r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$');
             return emailRegex.hasMatch(email);
-            }
             }
 
   @override
@@ -107,8 +117,21 @@ class _LoginPageState extends State<LoginPage> {
                   hintText: 'Email',
                   obscureText: false,
                   icon: const Icon(Icons.email),
-                  
                 ),
+                if (!_isEmailValid)
+                  const Padding(
+                    padding: EdgeInsets.symmetric(horizontal: 25),
+                    child: Align(
+                      alignment: Alignment.centerLeft,
+                      child: Text(
+                        'Please enter a valid email address',
+                        style: TextStyle(
+                          color: Colors.red,
+                          fontSize: 12,
+                        ),
+                      ),
+                    ),
+                  ),
                 const SizedBox(height: 10),
                 MyTextField(
                   controller: passwordController,

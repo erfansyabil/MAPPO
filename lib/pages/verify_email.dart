@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:mappo/components/button.dart';
 
 class VerifyEmailPage extends StatelessWidget {
   final User? user;
@@ -22,12 +23,11 @@ class VerifyEmailPage extends StatelessWidget {
               textAlign: TextAlign.center,
             ),
             const SizedBox(height: 20),
-            ElevatedButton(
-              onPressed: () {
+            MyButton(
+              onTap: () {
                 _sendEmailVerification(context);
-              },
-              child: const Text('Resend Verification Email'),
-            ),
+                }, 
+              text: 'Resend Verification Email')
           ],
         ),
       ),

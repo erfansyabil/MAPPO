@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:mappo/components/button.dart';
 import 'package:mappo/components/myTextField.dart';
-import 'VerifyEmailPage.dart'; // Import the VerifyEmailPage
+import 'verify_email.dart';
+
 
 class SignUpPage extends StatefulWidget {
   const SignUpPage({super.key});
@@ -13,21 +15,100 @@ class SignUpPage extends StatefulWidget {
 
 class _SignUpPageState extends State<SignUpPage> {
   final FirebaseAuth _auth = FirebaseAuth.instance;
+  final FirebaseFirestore _firestore = FirebaseFirestore.instance;
+
+  final TextEditingController nameController = TextEditingController();
   final TextEditingController usernameController = TextEditingController();
   final TextEditingController emailController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
   final TextEditingController confirmPasswordController = TextEditingController();
+  final TextEditingController phoneController = TextEditingController();
 
-  bool _isEmailValid = true;
+  final bool _isEmailValid = true;
   bool _doPasswordsMatch = true;
 
   @override
   void dispose() {
+    nameController.dispose();
     usernameController.dispose();
     emailController.dispose();
     passwordController.dispose();
     confirmPasswordController.dispose();
+    phoneController.dispose();
     super.dispose();
+  }
+
+    void _signup() async {
+    String name = nameController.text;
+    String username = usernameController.text;
+    String email = emailController.text;
+    String password = passwordController.text;
+    String phone = phoneController.text;
+
+    try {
+      UserCredential userCredential = await _auth.createUserWithEmailAndPassword(
+        email: email,
+        password: password,
+      );
+
+      // Send verification email
+      await userCredential.user!.sendEmailVerification();
+
+      CollectionReference collRef =
+      FirebaseFirestore.instance.collection('users');
+      collRef.add({
+        'name': name,
+        'username': username,
+        'email': email,
+        'phone': int.parse(phone),
+      });
+
+      /*
+      // Store additional user details in Firestore
+      addUserDetails(
+        name.trim(), 
+        username.trim(), 
+        email.trim(),
+        int.parse(phone.trim()));
+        */
+
+      // Store additional user details in Firestore
+      /*await _firestore.collection('users').doc(userCredential.user!.uid).set({
+      'name': name,
+      'username': username,
+      'email': email,
+      'phone': phone,
+      });*/
+
+      // Navigate to VerifyEmailPage after successful sign up
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(
+          builder: (context) => VerifyEmailPage(user: userCredential.user),
+        ),
+      );
+    } catch (e) {
+      print('Error signing up: $e');
+      // Handle sign-up error, e.g., display an error message to the user
+    }
+  }
+
+  Future addUserDetails(
+    String name,
+    String username,
+    String email,
+    int phone) async {
+      await _firestore.collection('users').add({
+        'name': name,
+        'username': username,
+        'email': email,
+        'phone': phone,
+      });
+    }
+
+    bool _isValidEmail(String email) {
+    final emailRegex = RegExp(r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$');
+    return emailRegex.hasMatch(email);
   }
 
   @override
@@ -49,7 +130,14 @@ class _SignUpPageState extends State<SignUpPage> {
                   'lib/images/mappo.png',
                   height: 150,
                 ),
-                const SizedBox(height: 50),
+                const SizedBox(height: 20),
+                MyTextField(
+                  controller: nameController,
+                  hintText: 'Name',
+                  obscureText: false,
+                  icon: Icon(Icons.person),
+                  ),
+                const SizedBox(height: 20),
                 MyTextField(
                   controller: usernameController,
                   hintText: 'Username',
@@ -110,6 +198,13 @@ class _SignUpPageState extends State<SignUpPage> {
                     ),
                   ),
                 const SizedBox(height: 20),
+                MyTextField(
+                  controller: phoneController,
+                  hintText: 'Phone Number',
+                  obscureText: false,
+                  icon: Icon(Icons.phone),
+                  ),
+                const SizedBox(height: 20),
                 MyButton(
                   text: "Sign Up",
                   onTap: _isEmailValid ? _signup : null,
@@ -138,37 +233,5 @@ class _SignUpPageState extends State<SignUpPage> {
         ),
       ),
     );
-  }
-
-  void _signup() async {
-    String username = usernameController.text;
-    String email = emailController.text;
-    String password = passwordController.text;
-
-    try {
-      UserCredential userCredential = await _auth.createUserWithEmailAndPassword(
-        email: email,
-        password: password,
-      );
-
-      // Send verification email
-      await userCredential.user!.sendEmailVerification();
-
-      // Navigate to VerifyEmailPage after successful sign up
-      Navigator.pushReplacement(
-        context,
-        MaterialPageRoute(
-          builder: (context) => VerifyEmailPage(user: userCredential.user),
-        ),
-      );
-    } catch (e) {
-      print('Error signing up: $e');
-      // Handle sign-up error, e.g., display an error message to the user
-    }
-  }
-
-  bool _isValidEmail(String email) {
-    final emailRegex = RegExp(r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$');
-    return emailRegex.hasMatch(email);
   }
 }

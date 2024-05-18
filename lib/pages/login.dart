@@ -29,6 +29,9 @@ class _LoginPageState extends State<LoginPage> {
         _isEmailValid = true;
       });
     }
+
+    if (!mounted) return;
+
     showDialog(
       context: context, 
       builder: (context){
@@ -45,10 +48,13 @@ class _LoginPageState extends State<LoginPage> {
         );
         
         Navigator.of(context).pop();
+         if (!mounted) return;
 
         } on FirebaseAuthException catch (e) {
           
           Navigator.of(context).pop();
+
+           if (!mounted) return;
 
           if (e.code == 'invalid-email'){
             wrongEmailMessage();
@@ -59,6 +65,7 @@ class _LoginPageState extends State<LoginPage> {
       }
 
       void wrongEmailMessage(){
+         if (!mounted) return;
         showDialog(
           context: context, 
           builder: (context){
@@ -71,6 +78,7 @@ class _LoginPageState extends State<LoginPage> {
       }
 
       void wrongPasswordMessage(){
+         if (!mounted) return;
         showDialog(
           context: context, 
           builder: (context){

@@ -5,15 +5,17 @@ class MyTextField extends StatefulWidget{
   final String hintText;
   final bool obscureText;
   final Icon icon;
+  final Function(String)? onChanged;
 
 
   const MyTextField({
-    super.key,
+    Key? key,
     required this.controller,
     required this.hintText,
     required this.obscureText,
     required this.icon,
-    });
+    this.onChanged,
+  }) : super(key: key);
 
   @override
   State<MyTextField> createState() => _MyTextFieldState();
@@ -36,6 +38,7 @@ class _MyTextFieldState extends State<MyTextField> {
       child: TextField(
         controller: widget.controller,
         obscureText: _isObscured,
+        onChanged: widget.onChanged,
         decoration: InputDecoration(
           prefixIcon: widget.icon,
           suffixIcon: widget.obscureText

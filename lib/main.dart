@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:mappo/pages/auth.dart';
 import 'package:mappo/pages/homepage.dart';
+import 'package:mappo/pages/homepage_admin.dart';
 import 'pages/signup.dart'; // Import your sign-up page file
 import 'package:firebase_core/firebase_core.dart';
 import 'firebase_options.dart';
@@ -22,7 +23,7 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'MAPPO',
       theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(seedColor: Color.fromARGB(255, 255, 255, 255)),
+        colorScheme: ColorScheme.fromSeed(seedColor: const Color.fromARGB(255, 255, 255, 255)),
         useMaterial3: true,
       ),
       home: const AuthPage(),
@@ -30,6 +31,7 @@ class MyApp extends StatelessWidget {
 
         '/signup': (context) => const SignUpPage(), // Define the '/signup' route
         '/home': (context) => const HomePage(),
+        '/home_admin': (context) => const AdminHomePage(),
         // Add other routes if needed
       },
     );

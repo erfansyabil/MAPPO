@@ -9,13 +9,13 @@ class MyTextField extends StatefulWidget{
 
 
   const MyTextField({
-    Key? key,
+    super.key,
     required this.controller,
     required this.hintText,
     required this.obscureText,
     required this.icon,
     this.onChanged,
-  }) : super(key: key);
+  });
 
   @override
   State<MyTextField> createState() => _MyTextFieldState();
@@ -59,7 +59,7 @@ class _MyTextFieldState extends State<MyTextField> {
           focusedBorder: const OutlineInputBorder(
             borderSide: BorderSide(color: Color.fromARGB(255, 255, 0, 0)),
           ),
-          fillColor: Color.fromARGB(255, 255, 246, 164),
+          fillColor: const Color.fromARGB(255, 255, 246, 164),
           filled: true,
           hintText: widget.hintText,
         ),

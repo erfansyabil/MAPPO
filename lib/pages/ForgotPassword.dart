@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:mappo/components/button.dart';
+import 'package:mappo/components/mybutton.dart';
 import 'package:mappo/components/myTextField.dart';
 
 class ForgotPassword extends StatelessWidget {

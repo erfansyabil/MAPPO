@@ -1,18 +1,17 @@
-
 import 'package:flutter/material.dart';
-import 'navbar.dart';
+import 'package:mappo/pages/navbar_admin.dart';
 
-class HomePage extends StatelessWidget {
-  const HomePage({super.key});
+class AdminHomePage extends StatelessWidget {
+  const AdminHomePage({super.key});
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: const Color.fromARGB(255, 255, 255, 255),
-      drawer: const NavBar(),
+      drawer: const NavBarAdmin(),
       appBar: AppBar(
         backgroundColor: const Color.fromARGB(255, 255, 255, 255),
-        title: const Text('Home'),
+        title: const Text('Home Admin'),
       ),
       body: const Center(
         child: Column(

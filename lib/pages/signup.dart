@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:mappo/components/button.dart';
+import 'package:mappo/components/mybutton.dart';
 import 'package:mappo/components/myTextField.dart';
+import 'package:mappo/components/myDropdown.dart'; // Import MyDropdown
 import 'verify_email.dart';
-
+import 'auth.dart';
 
 class SignUpPage extends StatefulWidget {
   const SignUpPage({super.key});
@@ -14,8 +14,7 @@ class SignUpPage extends StatefulWidget {
 }
 
 class _SignUpPageState extends State<SignUpPage> {
-  final FirebaseAuth _auth = FirebaseAuth.instance;
-  final FirebaseFirestore _firestore = FirebaseFirestore.instance;
+  final FirebaseAuthService _authService = FirebaseAuthService();
 
   final TextEditingController nameController = TextEditingController();
   final TextEditingController usernameController = TextEditingController();
@@ -24,8 +23,10 @@ class _SignUpPageState extends State<SignUpPage> {
   final TextEditingController confirmPasswordController = TextEditingController();
   final TextEditingController phoneController = TextEditingController();
 
-  final bool _isEmailValid = true;
+  bool _isEmailValid = true;
   bool _doPasswordsMatch = true;
+  bool _isLoading = false;
+  String _selectedRole = 'customer'; // Default role
 
   @override
   void dispose() {
@@ -38,75 +39,81 @@ class _SignUpPageState extends State<SignUpPage> {
     super.dispose();
   }
 
-    void _signup() async {
-    String name = nameController.text;
-    String username = usernameController.text;
-    String email = emailController.text;
-    String password = passwordController.text;
-    String phone = phoneController.text;
+  void _signup() async {
+    if (!mounted) return;
 
-    try {
-      UserCredential userCredential = await _auth.createUserWithEmailAndPassword(
-        email: email,
-        password: password,
+    setState(() {
+      _isLoading = true;
+    });
+
+    String name = nameController.text.trim();
+    String username = usernameController.text.trim();
+    String email = emailController.text.trim();
+    String password = passwordController.text.trim();
+    String confirmPassword = confirmPasswordController.text.trim();
+    String phone = phoneController.text.trim();
+
+    if (!_isValidEmail(email)) {
+      setState(() {
+        _isEmailValid = false;
+        _isLoading = false;
+      });
+      return;
+    } else {
+      setState(() {
+        _isEmailValid = true;
+      });
+    }
+
+    if (password != confirmPassword) {
+      setState(() {
+        _doPasswordsMatch = false;
+        _isLoading = false;
+      });
+      return;
+    } else {
+      setState(() {
+        _doPasswordsMatch = true;
+      });
+    }
+
+    User? user = await _authService.signUpWithEmailAndPassword(
+      email,
+      password,
+      _selectedRole,
+    );
+
+    if (user != null) {
+      await _authService.addUserDetails(
+        user.uid,
+        name,
+        username,
+        email,
+        int.parse(phone),
+        _selectedRole,
       );
 
-      // Send verification email
-      await userCredential.user!.sendEmailVerification();
+      await user.sendEmailVerification();
 
-      CollectionReference collRef =
-      FirebaseFirestore.instance.collection('users');
-      collRef.add({
-        'name': name,
-        'username': username,
-        'email': email,
-        'phone': int.parse(phone),
-      });
-
-      /*
-      // Store additional user details in Firestore
-      addUserDetails(
-        name.trim(), 
-        username.trim(), 
-        email.trim(),
-        int.parse(phone.trim()));
-        */
-
-      // Store additional user details in Firestore
-      /*await _firestore.collection('users').doc(userCredential.user!.uid).set({
-      'name': name,
-      'username': username,
-      'email': email,
-      'phone': phone,
-      });*/
-
-      // Navigate to VerifyEmailPage after successful sign up
+      if (!mounted) return;
       Navigator.pushReplacement(
         context,
         MaterialPageRoute(
-          builder: (context) => VerifyEmailPage(user: userCredential.user),
+          builder: (context) => VerifyEmailPage(user: user),
         ),
       );
-    } catch (e) {
-      print('Error signing up: $e');
-      // Handle sign-up error, e.g., display an error message to the user
+    } else {
+      if (!mounted) return;
+      setState(() {
+        _isLoading = false;
+      });
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Failed to sign up')),
+      );
     }
   }
 
-  Future addUserDetails(
-    String name,
-    String username,
-    String email,
-    int phone) async {
-      await _firestore.collection('users').add({
-        'name': name,
-        'username': username,
-        'email': email,
-        'phone': phone,
-      });
-    }
-
-    bool _isValidEmail(String email) {
+  bool _isValidEmail(String email) {
     final emailRegex = RegExp(r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$');
     return emailRegex.hasMatch(email);
   }
@@ -114,123 +121,138 @@ class _SignUpPageState extends State<SignUpPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Color.fromARGB(255, 255, 255, 255),
+      backgroundColor: const Color.fromARGB(255, 255, 255, 255),
       appBar: AppBar(
-        backgroundColor: Color.fromARGB(255, 255, 255, 255),
+        backgroundColor: const Color.fromARGB(255, 255, 255, 255),
         title: const Text('Sign Up'),
       ),
       body: SafeArea(
-        child: SingleChildScrollView(
-          child: Padding(
-            padding: const EdgeInsets.all(20.0),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: <Widget>[
-                Image.asset(
-                  'lib/images/mappo.png',
-                  height: 150,
-                ),
-                const SizedBox(height: 20),
-                MyTextField(
-                  controller: nameController,
-                  hintText: 'Name',
-                  obscureText: false,
-                  icon: Icon(Icons.person),
-                  ),
-                const SizedBox(height: 20),
-                MyTextField(
-                  controller: usernameController,
-                  hintText: 'Username',
-                  obscureText: false,
-                  icon: const Icon(Icons.person),
-                ),
-                const SizedBox(height: 20),
-                MyTextField(
-                  controller: emailController,
-                  hintText: 'Email',
-                  obscureText: false,
-                  icon: const Icon(Icons.email),
-                ),
-                if (!_isEmailValid)
-                  const Padding(
-                    padding: EdgeInsets.symmetric(horizontal: 25),
-                    child: Align(
-                      alignment: Alignment.centerLeft,
-                      child: Text(
-                        'Please enter a valid email address',
-                        style: TextStyle(
-                          color: Colors.red,
-                          fontSize: 12,
-                        ),
+        child: _isLoading
+            ? const Center(child: CircularProgressIndicator())
+            : SingleChildScrollView(
+                child: Padding(
+                  padding: const EdgeInsets.all(20.0),
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: <Widget>[
+                      Image.asset(
+                        'lib/images/mappo.png',
+                        height: 150,
                       ),
-                    ),
-                  ),
-                const SizedBox(height: 20),
-                MyTextField(
-                  controller: passwordController,
-                  hintText: 'Password',
-                  obscureText: true,
-                  icon: const Icon(Icons.lock),
-                ),const SizedBox(height: 20),
-                MyTextField(
-                  controller: confirmPasswordController,
-                  hintText: 'Confirm Password',
-                  obscureText: true,
-                  icon: const Icon(Icons.lock),
-                  onChanged: (value) {
-                    setState(() {
-                      _doPasswordsMatch = passwordController.text == confirmPasswordController.text;
-                    });
-                  },
-                ),
-                if (!_doPasswordsMatch)
-                  const Padding(
-                    padding: EdgeInsets.symmetric(horizontal: 25),
-                    child: Align(
-                      alignment: Alignment.centerLeft,
-                      child: Text(
-                        'Passwords do not match',
-                        style: TextStyle(
-                          color: Colors.red,
-                          fontSize: 12,
-                        ),
+                      const SizedBox(height: 20),
+                      MyTextField(
+                        controller: nameController,
+                        hintText: 'Name',
+                        obscureText: false,
+                        icon: const Icon(Icons.person),
                       ),
-                    ),
-                  ),
-                const SizedBox(height: 20),
-                MyTextField(
-                  controller: phoneController,
-                  hintText: 'Phone Number',
-                  obscureText: false,
-                  icon: Icon(Icons.phone),
-                  ),
-                const SizedBox(height: 20),
-                MyButton(
-                  text: "Sign Up",
-                  onTap: _isEmailValid ? _signup : null,
-                ),
-                const SizedBox(height: 20),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: <Widget>[
-                    const Text("Already have an account?"),
-                    TextButton(
-                      onPressed: () {
-                        Navigator.pop(context); // Navigate back to login page
-                      },
-                      child: Text(
-                        'Log In',
-                        style: TextStyle(
-                          color: Theme.of(context).primaryColor,
-                        ),
+                      const SizedBox(height: 20),
+                      MyTextField(
+                        controller: usernameController,
+                        hintText: 'Username',
+                        obscureText: false,
+                        icon: const Icon(Icons.person),
                       ),
-                    ),
-                  ],
+                      const SizedBox(height: 20),
+                      MyTextField(
+                        controller: emailController,
+                        hintText: 'Email',
+                        obscureText: false,
+                        icon: const Icon(Icons.email),
+                      ),
+                      if (!_isEmailValid)
+                        const Padding(
+                          padding: EdgeInsets.symmetric(horizontal: 25),
+                          child: Align(
+                            alignment: Alignment.centerLeft,
+                            child: Text(
+                              'Please enter a valid email address',
+                              style: TextStyle(
+                                color: Colors.red,
+                                fontSize: 12,
+                              ),
+                            ),
+                          ),
+                        ),
+                      const SizedBox(height: 20),
+                      MyTextField(
+                        controller: passwordController,
+                        hintText: 'Password',
+                        obscureText: true,
+                        icon: const Icon(Icons.lock),
+                      ),
+                      const SizedBox(height: 20),
+                      MyTextField(
+                        controller: confirmPasswordController,
+                        hintText: 'Confirm Password',
+                        obscureText: true,
+                        icon: const Icon(Icons.lock),
+                        onChanged: (value) {
+                          setState(() {
+                            _doPasswordsMatch = passwordController.text == confirmPasswordController.text;
+                          });
+                        },
+                      ),
+                      if (!_doPasswordsMatch)
+                        const Padding(
+                          padding: EdgeInsets.symmetric(horizontal: 25),
+                          child: Align(
+                            alignment: Alignment.centerLeft,
+                            child: Text(
+                              'Passwords do not match',
+                              style: TextStyle(
+                                color: Colors.red,
+                                fontSize: 12,
+                              ),
+                            ),
+                          ),
+                        ),
+                      const SizedBox(height: 20),
+                      MyTextField(
+                        controller: phoneController,
+                        hintText: 'Phone Number',
+                        obscureText: false,
+                        icon: const Icon(Icons.phone),
+                      ),
+                      const SizedBox(height: 20),
+                      MyDropdown(
+                        hintText: 'Select Role',
+                        icon: const Icon(Icons.arrow_drop_down),
+                        items: const ['customer', 'admin'], // Ensure there are no duplicate items
+                        value: _selectedRole.isEmpty ? 'customer' : _selectedRole,
+                        onChanged: (String? newValue) {
+                          setState(() {
+                            _selectedRole = newValue!;
+                          });
+                        },
+                      ),
+                      const SizedBox(height: 20),
+                      MyButton(
+                        text: "Sign Up",
+                        onTap: _signup,
+                      ),
+                      const SizedBox(height: 20),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: <Widget>[
+                          const Text("Already have an account?"),
+                          TextButton(
+                            onPressed: () {
+                              Navigator.pop(context); // Navigate back to login page
+                            },
+                            child: Text(
+                              'Log In',
+                              style: TextStyle(
+                                color: Theme.of(context).primaryColor,
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),
                 ),
-              ],
-            ),
-          ),
-        ),
+              ),
       ),
     );
   }

@@ -6,6 +6,7 @@ class MyTextField extends StatefulWidget{
   final bool obscureText;
   final Icon icon;
   final Function(String)? onChanged;
+  final bool readOnly;
 
 
   const MyTextField({
@@ -14,6 +15,7 @@ class MyTextField extends StatefulWidget{
     required this.hintText,
     required this.obscureText,
     required this.icon,
+    this.readOnly = false,
     this.onChanged,
   });
 
@@ -38,6 +40,7 @@ class _MyTextFieldState extends State<MyTextField> {
       child: TextField(
         controller: widget.controller,
         obscureText: _isObscured,
+        readOnly: widget.readOnly,
         onChanged: widget.onChanged,
         decoration: InputDecoration(
           prefixIcon: widget.icon,

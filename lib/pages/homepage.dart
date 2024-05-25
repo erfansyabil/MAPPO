@@ -5,6 +5,8 @@ import 'package:mappo/common/color_extension.dart';
 import 'package:mappo/common_widget/round_textfield.dart';
 import '../../common_widget/popular_resutaurant_row.dart';
 import '../../common_widget/view_all_title_row.dart';
+import 'restaurant_page.dart';
+import 'package:mappo/pages/restaurant.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -16,31 +18,37 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
   TextEditingController txtSearch = TextEditingController();
 
-  List popArr = [
-    {
-      "image": "lib/images/res_1.png",
-      "name": "Minute by tuk tuk",
-      "rate": "4.9",
-      "rating": "124",
-      "type": "Cafa",
-      "food_type": "Western Food"
-    },
-    {
-      "image": "lib/images/res_2.png",
-      "name": "Café de Noir",
-      "rate": "4.9",
-      "rating": "124",
-      "type": "Cafa",
-      "food_type": "Western Food"
-    },
-    {
-      "image": "lib/images/res_3.png",
-      "name": "Bakes by Tella",
-      "rate": "4.9",
-      "rating": "124",
-      "type": "Cafa",
-      "food_type": "Western Food"
-    },
+  List<Restaurant> popArr = [
+    Restaurant(
+      id: "1",
+      name: "Minute by tuk tuk",
+      address: "Lorong Haji Taib, Chow Kit, 50350 Kuala Lumpur, Federal Territory of Kuala Lumpur",
+      foodType: "Asian Food",
+      restaurantType: "Cafe",
+      image: "assets/img/res_1.png",
+      rate: "4.7",
+      rating: "200",
+    ),
+    Restaurant(
+      id: "2",
+      name: "Café de Noir",
+      address: "Jalan Kebudayaan 38, Taman Universiti, 81300 Skudai, Johor",
+      foodType: "Western Food",
+      restaurantType: "Cafe",
+      image: "assets/img/res_2.png",
+      rate: "4.9",
+      rating: "104",
+    ),
+    Restaurant(
+      id: "3",
+      name: "Bakes by Tella",
+      address: "2011, Jln Ismail Sultan, Danga Bay Johor bahru, 80200 Johor",
+      foodType: "European Food",
+      restaurantType: "Cafe",
+      image: "assets/img/res_3.png",
+      rate: "4.1",
+      rating: "231",
+    ),
   ];
 
   @override
@@ -65,8 +73,7 @@ class _HomePageState extends State<HomePage> {
                   children: [
                     Text(
                       "Delivering to",
-                      style:
-                      TextStyle(color: TColor.secondaryText, fontSize: 11),
+                      style: TextStyle(color: TColor.secondaryText, fontSize: 11),
                     ),
                     const SizedBox(
                       height: 6,
@@ -129,10 +136,17 @@ class _HomePageState extends State<HomePage> {
                 padding: EdgeInsets.zero,
                 itemCount: popArr.length,
                 itemBuilder: ((context, index) {
-                  var pObj = popArr[index] as Map? ?? {};
+                  var pObj = popArr[index];
                   return PopularRestaurantRow(
                     pObj: pObj,
-                    onTap: () {},
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => RestaurantPage(restaurant: pObj),
+                        ),
+                      );
+                    },
                   );
                 }),
               ),

@@ -5,7 +5,6 @@ import 'package:mappo/common/color_extension.dart';
 import 'package:mappo/common_widget/round_textfield.dart';
 import '../../common_widget/popular_resutaurant_row.dart';
 import '../../common_widget/view_all_title_row.dart';
-//import 'navbar.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -47,6 +46,9 @@ class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+        title: const Text("Home Page"),
+      ),
       drawer: const NavBar(),
       body: SingleChildScrollView(
         child: Padding(
@@ -64,7 +66,7 @@ class _HomePageState extends State<HomePage> {
                     Text(
                       "Delivering to",
                       style:
-                          TextStyle(color: TColor.secondaryText, fontSize: 11),
+                      TextStyle(color: TColor.secondaryText, fontSize: 11),
                     ),
                     const SizedBox(
                       height: 6,

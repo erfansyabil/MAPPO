@@ -5,7 +5,7 @@ import 'package:mappo/pages/restaurant.dart';
 class RestaurantPage extends StatelessWidget {
   final Restaurant restaurant;
 
-  const RestaurantPage({Key? key, required this.restaurant}) : super(key: key);
+  const RestaurantPage({super.key, required this.restaurant});
 
   @override
   Widget build(BuildContext context) {

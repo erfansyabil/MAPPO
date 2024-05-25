@@ -6,7 +6,7 @@ class PopularRestaurantRow extends StatelessWidget {
   final Restaurant pObj;
   final VoidCallback onTap;
 
-  const PopularRestaurantRow({Key? key, required this.pObj, required this.onTap}) : super(key: key);
+  const PopularRestaurantRow({super.key, required this.pObj, required this.onTap});
 
   @override
   Widget build(BuildContext context) {

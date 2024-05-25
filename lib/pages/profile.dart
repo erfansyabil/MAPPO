@@ -4,6 +4,7 @@ import 'package:mappo/components/myTextField.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:mappo/components/mybutton.dart';
 
+
 class ProfilePage extends StatefulWidget {
   const ProfilePage({super.key});
 
@@ -42,13 +43,7 @@ class _ProfilePageState extends State<ProfilePage> {
           emailController.text = data['email'] ?? '';
           usernameController.text = data['username'] ?? '';
           nameController.text = data['name'] ?? '';
-          phoneNumberController.text =
-              (data['phone'] != null) ? data['phone'].toString() : '';
-          isLoading = false;
-        });
-      } else {
-        debugPrint('User document does not exist');
-        setState(() {
+          phoneNumberController.text = (data['phone'] != null) ? data['phone'].toString() : '';
           isLoading = false;
         });
       }
@@ -86,6 +81,14 @@ class _ProfilePageState extends State<ProfilePage> {
               readOnly: true,
             ),
             const SizedBox(height: 20),
+            MyTextField(
+              controller: nameController, 
+              hintText: 'Name', 
+              obscureText: false, 
+              icon: const Icon(Icons.person),
+              readOnly: true,
+              ),
+            const SizedBox(height: 20),
             TextField(
               controller: emailController,
               decoration: const InputDecoration(
@@ -95,14 +98,13 @@ class _ProfilePageState extends State<ProfilePage> {
               ),
             ),
             const SizedBox(height: 20),
-            TextField(
-              controller: emailController,
-              decoration: const InputDecoration(
-                labelText: 'password',
-                border: OutlineInputBorder(),
-                prefixIcon: Icon(Icons.remove_red_eye),
+              MyTextField(
+              controller: phoneNumberController, 
+              hintText: 'Phone number', 
+              obscureText: false, 
+              icon: const Icon(Icons.add_call),
+              readOnly: true,
               ),
-            ),
             const SizedBox(height: 20),
             MyButton(
                 onTap: () {
@@ -115,7 +117,6 @@ class _ProfilePageState extends State<ProfilePage> {
     );
   }
 
-  //buttons nak tukar fucction laterrrrr
   void resetPassword(BuildContext context) async {
     String email = emailController.text;
     try {

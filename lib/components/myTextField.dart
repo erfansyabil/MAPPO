@@ -39,8 +39,8 @@ class _MyTextFieldState extends State<MyTextField> {
       child: TextField(
         controller: widget.controller,
         obscureText: _isObscured,
-        readOnly: widget.readOnly,
         onChanged: widget.onChanged,
+        readOnly: widget.readOnly,
         decoration: InputDecoration(
           prefixIcon: widget.icon,
           suffixIcon: widget.obscureText

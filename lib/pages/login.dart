@@ -69,19 +69,17 @@ class _LoginPageState extends State<LoginPage> {
           Navigator.pushReplacement(
             context,
             MaterialPageRoute(builder: (context) => const AdminHomePage()),
-            );
-            } else {
-              Navigator.pushReplacement(
-                context,
-                MaterialPageRoute(builder: (context) => const HomePage()),
-                );
-                }
-                } else {
-                  roleInvalid();
-                  }
-
+          );
+        } else {
+          Navigator.pushReplacement(
+            context,
+            MaterialPageRoute(builder: (context) => const HomePage()),
+          );
+        }
+      } else {
+        roleInvalid();
+      }
     } on FirebaseAuthException catch (e) {
-
       if (e.code == 'invalid-email') {
         wrongEmailMessage();
       } else if (e.code == 'wrong-password') {
@@ -135,7 +133,8 @@ class _LoginPageState extends State<LoginPage> {
   Widget build(BuildContext context) {
     return MaterialApp(
       routes: {
-        '/signup': (context) => const SignUpPage(), // Define the '/signup' route
+        '/signup': (context) =>
+            const SignUpPage(), // Define the '/signup' route
       },
       home: Scaffold(
         resizeToAvoidBottomInset: true,
@@ -193,7 +192,8 @@ class _LoginPageState extends State<LoginPage> {
                     onTap: () {
                       Navigator.push(
                         context,
-                        MaterialPageRoute(builder: (context) => ForgotPassword()),
+                        MaterialPageRoute(
+                            builder: (context) => ForgotPassword()),
                       );
                     },
                     child: const Padding(

@@ -20,7 +20,8 @@ class _SignUpPageState extends State<SignUpPage> {
   final TextEditingController usernameController = TextEditingController();
   final TextEditingController emailController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
-  final TextEditingController confirmPasswordController = TextEditingController();
+  final TextEditingController confirmPasswordController =
+      TextEditingController();
   final TextEditingController phoneController = TextEditingController();
 
   bool _isEmailValid = true;
@@ -189,7 +190,8 @@ class _SignUpPageState extends State<SignUpPage> {
                         icon: const Icon(Icons.lock),
                         onChanged: (value) {
                           setState(() {
-                            _doPasswordsMatch = passwordController.text == confirmPasswordController.text;
+                            _doPasswordsMatch = passwordController.text ==
+                                confirmPasswordController.text;
                           });
                         },
                       ),
@@ -218,8 +220,12 @@ class _SignUpPageState extends State<SignUpPage> {
                       MyDropdown(
                         hintText: 'Select Role',
                         icon: const Icon(Icons.arrow_drop_down),
-                        items: const ['customer', 'admin'], // Ensure there are no duplicate items
-                        value: _selectedRole.isEmpty ? 'customer' : _selectedRole,
+                        items: const [
+                          'customer',
+                          'admin'
+                        ], // Ensure there are no duplicate items
+                        value:
+                            _selectedRole.isEmpty ? 'customer' : _selectedRole,
                         onChanged: (String? newValue) {
                           setState(() {
                             _selectedRole = newValue!;
@@ -238,7 +244,8 @@ class _SignUpPageState extends State<SignUpPage> {
                           const Text("Already have an account?"),
                           TextButton(
                             onPressed: () {
-                              Navigator.pop(context); // Navigate back to login page
+                              Navigator.pop(
+                                  context); // Navigate back to login page
                             },
                             child: Text(
                               'Log In',

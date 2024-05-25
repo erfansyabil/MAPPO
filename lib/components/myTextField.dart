@@ -1,13 +1,13 @@
+// ignore: file_names
 import 'package:flutter/material.dart';
 
-class MyTextField extends StatefulWidget{
+class MyTextField extends StatefulWidget {
   final TextEditingController controller;
   final String hintText;
   final bool obscureText;
   final Icon icon;
   final Function(String)? onChanged;
   final bool readOnly;
-
 
   const MyTextField({
     super.key,
@@ -24,8 +24,7 @@ class MyTextField extends StatefulWidget{
 }
 
 class _MyTextFieldState extends State<MyTextField> {
-
-    late bool _isObscured;
+  late bool _isObscured;
 
   @override
   void initState() {

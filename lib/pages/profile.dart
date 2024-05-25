@@ -4,10 +4,8 @@ import 'package:mappo/components/myTextField.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:mappo/components/mybutton.dart';
 
-
 class ProfilePage extends StatefulWidget {
   const ProfilePage({super.key});
-
 
   @override
   State<ProfilePage> createState() => _ProfilePageState();
@@ -44,14 +42,15 @@ class _ProfilePageState extends State<ProfilePage> {
           emailController.text = data['email'] ?? '';
           usernameController.text = data['username'] ?? '';
           nameController.text = data['name'] ?? '';
-          phoneNumberController.text = (data['phone'] != null) ? data['phone'].toString() : '';
+          phoneNumberController.text =
+              (data['phone'] != null) ? data['phone'].toString() : '';
           isLoading = false;
         });
-      } else  {
-        debugPrint('User document does not exist'); 
+      } else {
+        debugPrint('User document does not exist');
         setState(() {
           isLoading = false;
-          });
+        });
       }
     } catch (e) {
       debugPrint('Error fetching user data: $e');
@@ -74,50 +73,42 @@ class _ProfilePageState extends State<ProfilePage> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
-            const Icon(
-              Icons.account_circle,
-              size: 200),
+            Image.asset(
+              'lib/images/user.jpeg',
+              height: 200,
+            ),
             const SizedBox(height: 20),
             MyTextField(
-              controller: usernameController, 
-              hintText: 'Username', 
-              obscureText: false, 
+              controller: usernameController,
+              hintText: 'Username',
+              obscureText: false,
               icon: const Icon(Icons.person),
               readOnly: true,
-              ),
-
+            ),
             const SizedBox(height: 20),
-            MyTextField(
-              controller: emailController, 
-              hintText: 'Email', 
-              obscureText: false, 
-              icon: const Icon(Icons.email),
-              readOnly: true,
+            TextField(
+              controller: emailController,
+              decoration: const InputDecoration(
+                labelText: 'Email',
+                border: OutlineInputBorder(),
+                prefixIcon: Icon(Icons.email),
               ),
-
+            ),
             const SizedBox(height: 20),
-            MyTextField(
-              controller: nameController, 
-              hintText: 'Name', 
-              obscureText: false, 
-              icon: const Icon(Icons.person),
-              readOnly: true,
+            TextField(
+              controller: emailController,
+              decoration: const InputDecoration(
+                labelText: 'password',
+                border: OutlineInputBorder(),
+                prefixIcon: Icon(Icons.remove_red_eye),
               ),
-
-            const SizedBox(height: 20),
-              MyTextField(
-              controller: phoneNumberController, 
-              hintText: 'Phone number', 
-              obscureText: false, 
-              icon: const Icon(Icons.add_call),
-              readOnly: true,
-              ),
+            ),
             const SizedBox(height: 20),
             MyButton(
-              onTap: (){
-                resetPassword(context);
-              }, 
-              text: 'Reset password'),
+                onTap: () {
+                  resetPassword(context);
+                },
+                text: 'Reset password'),
           ],
         ),
       ),

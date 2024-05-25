@@ -9,11 +9,11 @@ import 'firebase_options.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(
-  options: DefaultFirebaseOptions.currentPlatform,
-);
+    options: DefaultFirebaseOptions.currentPlatform,
+  );
   runApp(const MyApp());
 }
- 
+
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
 
@@ -23,18 +23,18 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'MAPPO',
       theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(seedColor: const Color.fromARGB(255, 255, 255, 255)),
+        colorScheme: ColorScheme.fromSeed(
+            seedColor: const Color.fromARGB(255, 255, 255, 255)),
         useMaterial3: true,
       ),
       home: const AuthPage(),
       routes: {
-
-        '/signup': (context) => const SignUpPage(), // Define the '/signup' route
+        '/signup': (context) =>
+            const SignUpPage(), // Define the '/signup' route
         '/home': (context) => const HomePage(),
         '/home_admin': (context) => const AdminHomePage(),
         // Add other routes if needed
       },
     );
-
   }
 }

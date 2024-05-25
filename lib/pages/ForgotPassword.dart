@@ -1,3 +1,4 @@
+// ignore: file_names
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:mappo/components/mybutton.dart';
@@ -15,30 +16,29 @@ class ForgotPassword extends StatelessWidget {
       appBar: AppBar(
         title: const Text('Forgot Password?'),
       ),
-      
       body: Padding(
         padding: const EdgeInsets.all(20.0),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
-            const Icon(Icons.lock_outline_rounded,
-            size:200,
-            color: Color.fromARGB(255, 0, 0, 0),
+            const Icon(
+              Icons.lock_outline_rounded,
+              size: 200,
+              color: Color.fromARGB(255, 0, 0, 0),
             ),
             const SizedBox(height: 20),
             MyTextField(
-              controller: emailController, 
-              hintText: 'Email', 
-              obscureText: false, 
+              controller: emailController,
+              hintText: 'Email',
+              obscureText: false,
               icon: const Icon(Icons.email),
-              ),
+            ),
             const SizedBox(height: 20),
             MyButton(
-              onTap: () {
-                resetPassword(context);
-              }, 
-              text: 'Reset Password'
-              ),
+                onTap: () {
+                  resetPassword(context);
+                },
+                text: 'Reset Password'),
             const SizedBox(height: 20),
           ],
         ),

@@ -5,12 +5,12 @@ import 'package:firebase_storage/firebase_storage.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:mappo/common/color_extension.dart';
 import 'package:mappo/components/myTextField.dart';
-import 'package:mappo/components/myButton.dart'; // Import the MyTextField widget
+import 'package:mappo/components/myButton.dart'; 
 import 'package:path/path.dart' as path;
-import 'package:path_provider/path_provider.dart';
+import 'package:permission_handler/permission_handler.dart';
 
 class AddRestaurantPage extends StatefulWidget {
-  const AddRestaurantPage({super.key});
+  const AddRestaurantPage({Key? key}) : super(key: key);
 
   @override
   State<AddRestaurantPage> createState() => _AddRestaurantPageState();
@@ -28,6 +28,32 @@ class _AddRestaurantPageState extends State<AddRestaurantPage> {
   final ImagePicker _picker = ImagePicker();
 
   Future<void> _pickImage() async {
+    // Request storage permission
+    var status = await Permission.storage.request();
+    if (!status.isGranted) {
+      // Permission denied, handle the situation accordingly
+      // For example, show a message to inform the user why the permission is needed
+      if (!mounted) return;
+      showDialog(
+        context: context,
+        builder: (context) {
+          return AlertDialog(
+            title: const Text('Permission Denied'),
+            content: const Text('Storage permission is required to pick an image.'),
+            actions: [
+              TextButton(
+                onPressed: () => Navigator.pop(context),
+                child: const Text('OK'),
+              ),
+            ],
+          );
+        },
+      );
+      return;
+    }
+
+    // Permission granted, proceed with picking an image
+    // You can continue with your existing logic to pick an image
     final pickedFile = await _picker.pickImage(source: ImageSource.gallery);
     if (pickedFile != null) {
       setState(() {
@@ -45,7 +71,7 @@ class _AddRestaurantPageState extends State<AddRestaurantPage> {
       final downloadUrl = await snapshot.ref.getDownloadURL();
       return downloadUrl;
     } catch (e) {
-      print('Error uploading image: $e');
+      debugPrint('Error uploading image: $e');
       return null;
     }
   }
@@ -59,7 +85,7 @@ class _AddRestaurantPageState extends State<AddRestaurantPage> {
         _ratingController.text.isEmpty ||
         _image == null) {
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Please fill all the fields and select an image')),
+        const SnackBar(content: Text('Please fill all the fields and select an image')),
       );
       return;
     }
@@ -67,8 +93,9 @@ class _AddRestaurantPageState extends State<AddRestaurantPage> {
     try {
       final imageUrl = await _uploadImage(_image!);
       if (imageUrl == null) {
+        if (!mounted) return;
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Failed to upload image')),
+          const SnackBar(content: Text('Failed to upload image')),
         );
         return;
       }
@@ -82,14 +109,15 @@ class _AddRestaurantPageState extends State<AddRestaurantPage> {
         'rate': _rateController.text,
         'rating': _ratingController.text,
       });
-
+      
+      if (!mounted) return;
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Restaurant added successfully')),
+        const SnackBar(content: Text('Restaurant added successfully')),
       );
 
       Navigator.pop(context); // Go back to the previous page
     } catch (e) {
-      print('Error adding restaurant: $e');
+      debugPrint('Error adding restaurant: $e');
     }
   }
 
@@ -157,11 +185,11 @@ class _AddRestaurantPageState extends State<AddRestaurantPage> {
                           ),
                           child: Row(
                             children: [
-                              const Icon(Icons.image, color: Colors.grey),
+                              const Icon(Icons.image, color: Color.fromARGB(255, 0, 0, 0)),
                               const SizedBox(width: 10),
                               Text(
                                 _image == null ? "Pick Image" : "Image Selected",
-                                style: TextStyle(color: Colors.grey[800]),
+                                style: const TextStyle(color:  Color.fromARGB(255, 0, 0, 0)),
                               ),
                             ],
                           ),

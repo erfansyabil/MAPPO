@@ -64,7 +64,7 @@ class _LoginPageState extends State<LoginPage> {
       // Get user role
       String? role = await authService.getUserRole();
       if (role != null) {
-        // Navigate based on user rol
+        // Navigate based on user role
         if (role == 'admin') {
           if (!mounted) return;
           Navigator.pushReplacement(
@@ -195,7 +195,8 @@ class _LoginPageState extends State<LoginPage> {
                       Navigator.push(
                         context,
                         MaterialPageRoute(
-                            builder: (context) => ForgotPassword()),
+                          builder: (context) => ForgotPassword(),
+                        ),
                       );
                     },
                     child: const Padding(
@@ -219,7 +220,7 @@ class _LoginPageState extends State<LoginPage> {
                     text: "Sign In",
                     onTap: signIn,
                   ),
-                  const SizedBox(height: 0),
+                  const SizedBox(height: 10),
                   TextButton(
                     onPressed: () {
                       // Navigate to sign up page
@@ -228,13 +229,16 @@ class _LoginPageState extends State<LoginPage> {
                     child: const Padding(
                       padding: EdgeInsets.symmetric(horizontal: 25),
                       child: Row(
-                        mainAxisAlignment: MainAxisAlignment.end,
+                        mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                          Text(
-                            "Don't have an account? Create one",
-                            style: TextStyle(
-                              color: Color.fromARGB(255, 100, 100, 100),
-                              fontSize: 15,
+                          Flexible(
+                            child: Text(
+                              "Don't have an account? Create one",
+                              style: TextStyle(
+                                color: Color.fromARGB(255, 100, 100, 100),
+                                fontSize: 15,
+                              ),
+                              textAlign: TextAlign.center,
                             ),
                           ),
                         ],

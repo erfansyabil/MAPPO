@@ -1,11 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:mappo/common/color_extension.dart';
 import 'package:mappo/pages/restaurant.dart';
+import 'review_page.dart';
+
 
 class RestaurantPage extends StatelessWidget {
   final Restaurant restaurant;
 
+
   const RestaurantPage({super.key, required this.restaurant});
+
 
   @override
   Widget build(BuildContext context) {
@@ -27,13 +31,13 @@ class RestaurantPage extends StatelessWidget {
               Container(
                 decoration: BoxDecoration(
                   border: Border.all(
-                    color: TColor.primary, // Set the border color
-                    width: 2.0, // Set the border width
+                    color: TColor.primary,
+                    width: 2.0,
                   ),
-                  borderRadius: BorderRadius.circular(8.0), // Optional: make the border rounded
+                  borderRadius: BorderRadius.circular(8.0),
                 ),
                 child: ClipRRect(
-                  borderRadius: BorderRadius.circular(8.0), // Clip the image to match the rounded border
+                  borderRadius: BorderRadius.circular(8.0),
                   child: Image.asset(
                     restaurant.image,
                     width: double.infinity,
@@ -129,13 +133,52 @@ class RestaurantPage extends StatelessWidget {
               const SizedBox(height: 16),
               Divider(color: TColor.secondaryText),
               const SizedBox(height: 16),
-              // Add more details or user reviews here
+              ElevatedButton(
+                onPressed: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => ReviewPage(restaurant: restaurant),
+                    ),
+                  );
+                },
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: TColor.primary,
+                  padding: const EdgeInsets.symmetric(vertical: 16),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(8),
+                  ),
+                ),
+                child: const Text(
+                  'Add Review',
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontSize: 16,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+              ),
+              const SizedBox(height: 16),
+              Text(
+                'Reviews',
+                style: TextStyle(
+                  color: TColor.primaryText,
+                  fontSize: 20,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+              ...restaurant.reviews.map((review) => ListTile(
+                title: Text(review.reviewerName),
+                subtitle: Text(review.comment),
+                trailing: Text('${review.rating} ★'),
+              )),
             ],
           ),
         ),
       ),
     );
   }
+
 
   Widget _buildInfoRow({required IconData icon, required String label, required String value}) {
     return Row(
@@ -168,3 +211,6 @@ class RestaurantPage extends StatelessWidget {
     );
   }
 }
+
+
+

@@ -66,11 +66,13 @@ class _LoginPageState extends State<LoginPage> {
       if (role != null) {
         // Navigate based on user rol
         if (role == 'admin') {
+          if (!mounted) return;
           Navigator.pushReplacement(
             context,
             MaterialPageRoute(builder: (context) => const AdminHomePage()),
           );
         } else {
+          if (!mounted) return;
           Navigator.pushReplacement(
             context,
             MaterialPageRoute(builder: (context) => const HomePage()),

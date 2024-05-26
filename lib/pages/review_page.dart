@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:mappo/common/color_extension.dart';
 import 'package:mappo/pages/restaurant.dart';
+import 'review.dart';
 
 
 class ReviewPage extends StatefulWidget {
@@ -26,9 +27,9 @@ class _ReviewPageState extends State<ReviewPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(
+        title: const Text(
           'Add Review',
-          style: const TextStyle(
+          style: TextStyle(
             fontWeight: FontWeight.bold,
           ),
         ),

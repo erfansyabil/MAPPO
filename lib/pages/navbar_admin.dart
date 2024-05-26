@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:mappo/pages/add_restaurant.dart';
 import 'package:mappo/pages/profile.dart'; // Import your profile.dart file
 import 'package:mappo/pages/login.dart'; // Import the login page to navigate after logout
 import 'package:cloud_firestore/cloud_firestore.dart'; // Import Firestore
@@ -57,6 +58,17 @@ void signUserOut(BuildContext context) {
                   onTap: () {
                     Navigator.pop(context); // Close the drawer and navigate
                     // Handle home navigation
+                  },
+                ),
+                ListTile(
+                  leading: const Icon(Icons.add),
+                  title: const Text('Add a restaurant'),
+                  onTap: () {
+                    Navigator.pop(context); // Close the drawer and navigate
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => const AddRestaurantPage()),
+                    );
                   },
                 ),
                 ListTile(

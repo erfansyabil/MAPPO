@@ -54,7 +54,7 @@ class _AdminHomePageState extends State<AdminHomePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text("Home Page"),
+        title: const Text("Admin Home Page"),
       ),
       drawer: const NavBarAdmin(),
       body: SingleChildScrollView(

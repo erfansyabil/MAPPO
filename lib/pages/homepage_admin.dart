@@ -8,7 +8,8 @@ import 'package:mappo/pages/restaurant_page.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 class AdminHomePage extends StatefulWidget {
-  const AdminHomePage({super.key});
+  final String userId;
+  const AdminHomePage({super.key, required this.userId});
 
   @override
   State<AdminHomePage> createState() => _AdminHomePageState();
@@ -49,7 +50,7 @@ class _AdminHomePageState extends State<AdminHomePage> {
       appBar: AppBar(
         title: const Text("Admin Home Page"),
       ),
-      drawer: const NavBarAdmin(),
+      drawer: NavBarAdmin(userId: widget.userId),
       body: SingleChildScrollView(
         child: Padding(
           padding: const EdgeInsets.symmetric(vertical: 20),

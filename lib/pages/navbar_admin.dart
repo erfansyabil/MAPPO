@@ -1,20 +1,24 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:mappo/pages/add_restaurant.dart';
+import 'package:mappo/pages/homepage_admin.dart';
+import 'package:mappo/pages/my_reviews.dart';
 import 'package:mappo/pages/profile.dart'; // Import your profile.dart file
 import 'package:mappo/pages/login.dart'; // Import the login page to navigate after logout
 import 'package:cloud_firestore/cloud_firestore.dart'; // Import Firestore
 
 class NavBarAdmin extends StatelessWidget {
-  const NavBarAdmin({super.key});
+  final String userId; // Add userId parameter
 
-void signUserOut(BuildContext context) {
-  FirebaseAuth.instance.signOut();
-  Navigator.pushReplacement(
-    context,
-    MaterialPageRoute(builder: (context) => const LoginPage()),
-  );
-}
+  const NavBarAdmin({super.key, required this.userId});
+
+  void signUserOut(BuildContext context) {
+    FirebaseAuth.instance.signOut();
+    Navigator.pushReplacement(
+      context,
+      MaterialPageRoute(builder: (context) => const LoginPage()),
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -57,7 +61,10 @@ void signUserOut(BuildContext context) {
                   title: const Text('Home'),
                   onTap: () {
                     Navigator.pop(context); // Close the drawer and navigate
-                    // Handle home navigation
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => AdminHomePage(userId: userId)),
+                    );
                   },
                 ),
                 ListTile(
@@ -76,7 +83,10 @@ void signUserOut(BuildContext context) {
                   title: const Text('My Reviews'),
                   onTap: () {
                     Navigator.pop(context); // Close the drawer and navigate
-                    // Handle my reviews navigation
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => MyReviewPage(userId: userId)), // Pass userId here
+                    );
                   },
                 ),
                 ListTile(

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:mappo/common/color_extension.dart';
 import 'package:mappo/pages/classes.dart';
 import 'review_page.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 
 class RestaurantPage extends StatelessWidget {
   final Restaurant restaurant;
@@ -26,33 +27,33 @@ class RestaurantPage extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               FutureBuilder<String>(
-                future: restaurant.getImageDownloadUrl(),
-                builder: (context, snapshot) {
-                if (snapshot.connectionState == ConnectionState.waiting) {
-                  return const CircularProgressIndicator();
-                } else if (snapshot.hasError) {
-                  return Text('Error loading image: ${snapshot.error}');
-                } else {
-                  return Container(
-                    decoration: BoxDecoration(
-                      border: Border.all(
-                        color: TColor.primary,
-                        width: 2.0,
-                      ),
-                      borderRadius: BorderRadius.circular(8.0),
-                    ),
-                    child: ClipRRect(
-                      borderRadius: BorderRadius.circular(8.0),
-                      child: Image.network(
-                        snapshot.data!, // Use the download URL here
-                        width: double.infinity,
-                        height: 200,
-                        fit: BoxFit.cover,
-                      ),
-                    ),
-                  );
-                }
-                }
+                  future: restaurant.getImageDownloadUrl(),
+                  builder: (context, snapshot) {
+                    if (snapshot.connectionState == ConnectionState.waiting) {
+                      return const CircularProgressIndicator();
+                    } else if (snapshot.hasError) {
+                      return Text('Error loading image: ${snapshot.error}');
+                    } else {
+                      return Container(
+                        decoration: BoxDecoration(
+                          border: Border.all(
+                            color: TColor.primary,
+                            width: 2.0,
+                          ),
+                          borderRadius: BorderRadius.circular(8.0),
+                        ),
+                        child: ClipRRect(
+                          borderRadius: BorderRadius.circular(8.0),
+                          child: Image.network(
+                            snapshot.data!, // Use the download URL here
+                            width: double.infinity,
+                            height: 200,
+                            fit: BoxFit.cover,
+                          ),
+                        ),
+                      );
+                    }
+                  }
               ),
               const SizedBox(height: 12),
               Text(
@@ -175,11 +176,34 @@ class RestaurantPage extends StatelessWidget {
                   fontWeight: FontWeight.bold,
                 ),
               ),
-              ...restaurant.reviews.map((review) => ListTile(
-                title: Text(review.reviewerName),
-                subtitle: Text(review.comment),
-                trailing: Text('${review.rating} ★'),
-              )),
+              StreamBuilder<QuerySnapshot>(
+                stream: FirebaseFirestore.instance
+                    .collection('restaurants')
+                    .doc(restaurant.id)
+                    .collection('reviews')
+                    .orderBy('timestamp', descending: true)
+                    .snapshots(),
+                builder: (context, snapshot) {
+                  if (snapshot.connectionState == ConnectionState.waiting) {
+                    return const CircularProgressIndicator();
+                  } else if (snapshot.hasError) {
+                    return Text('Error loading reviews: ${snapshot.error}');
+                  } else if (!snapshot.hasData || snapshot.data!.docs.isEmpty) {
+                    return const Text('No reviews yet.');
+                  } else {
+                    return Column(
+                      children: snapshot.data!.docs.map((doc) {
+                        Review review = Review.fromFirestore(doc);
+                        return ListTile(
+                          title: Text(review.reviewerName),
+                          subtitle: Text(review.comment),
+                          trailing: Text('${review.rating} ★'),
+                        );
+                      }).toList(),
+                    );
+                  }
+                },
+              ),
             ],
           ),
         ),

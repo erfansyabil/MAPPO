@@ -57,4 +57,14 @@ class Review {
     required this.comment,
     required this.rating,
   });
+
+  // Factory constructor to create Review object from Firestore document
+  factory Review.fromFirestore(DocumentSnapshot doc) {
+    Map<String, dynamic> data = doc.data() as Map<String, dynamic>;
+    return Review(
+      reviewerName: data['reviewerName'] ?? '',
+      comment: data['comment'] ?? '',
+      rating: data['rating']?.toDouble() ?? 0.0,
+    );
+  }
 }

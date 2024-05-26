@@ -1,19 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:mappo/common/color_extension.dart';
 import 'package:mappo/pages/classes.dart';
-
+import 'package:cloud_firestore/cloud_firestore.dart';
 
 class ReviewPage extends StatefulWidget {
   final Restaurant restaurant;
 
-
   const ReviewPage({super.key, required this.restaurant});
-
 
   @override
   State<ReviewPage> createState() => _ReviewPageState();
 }
-
 
 class _ReviewPageState extends State<ReviewPage> {
   final _formKey = GlobalKey<FormState>();
@@ -21,6 +18,21 @@ class _ReviewPageState extends State<ReviewPage> {
   final TextEditingController _commentController = TextEditingController();
   double _rating = 0.0;
 
+  Future<void> _addReview() async {
+    if (_formKey.currentState!.validate()) {
+      try {
+        await FirebaseFirestore.instance.collection('restaurants').doc(widget.restaurant.id).collection('reviews').add({
+          'reviewerName': _nameController.text,
+          'comment': _commentController.text,
+          'rating': _rating,
+          'timestamp': FieldValue.serverTimestamp(),
+        });
+        Navigator.pop(context);
+      } catch (e) {
+        print('Error adding review: $e');
+      }
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -118,19 +130,7 @@ class _ReviewPageState extends State<ReviewPage> {
                     ),
                     const SizedBox(height: 32),
                     ElevatedButton(
-                      onPressed: () {
-                        if (_formKey.currentState!.validate()) {
-                          // Add review to the restaurant
-                          setState(() {
-                            widget.restaurant.reviews.add(Review(
-                              reviewerName: _nameController.text,
-                              comment: _commentController.text,
-                              rating: _rating,
-                            ));
-                          });
-                          Navigator.pop(context);
-                        }
-                      },
+                      onPressed: _addReview,
                       style: ElevatedButton.styleFrom(
                         backgroundColor: TColor.primary,
                         padding: const EdgeInsets.symmetric(vertical: 16),
@@ -157,6 +157,3 @@ class _ReviewPageState extends State<ReviewPage> {
     );
   }
 }
-
-
-

@@ -1,13 +1,21 @@
 // ignore: file_names
+// ignore_for_file: use_build_context_synchronously
+
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:mappo/components/mybutton.dart';
 import 'package:mappo/components/myTextField.dart';
 
-class ForgotPassword extends StatelessWidget {
-  final TextEditingController emailController = TextEditingController();
+class ForgotPassword extends StatefulWidget {
 
-  ForgotPassword({super.key});
+  const ForgotPassword({super.key});
+
+  @override
+  State<ForgotPassword> createState() => _ForgotPasswordState();
+}
+
+class _ForgotPasswordState extends State<ForgotPassword> {
+  final TextEditingController emailController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -46,20 +54,26 @@ class ForgotPassword extends StatelessWidget {
     );
   }
 
-  void resetPassword(BuildContext context) async {
-    String email = emailController.text;
-    try {
-      await FirebaseAuth.instance.sendPasswordResetEmail(email: email);
-      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-        content: Text('Password reset email sent!'),
-        duration: Duration(seconds: 3),
-      ));
-    } catch (e) {
-      print('Failed to send reset email: $e');
-      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-        content: Text('Failed to send reset email. Please try again later.'),
-        duration: Duration(seconds: 3),
-      ));
-    }
+void resetPassword(BuildContext context) async {
+  String email = emailController.text;
+
+  if (!mounted) {
+    return;
   }
+
+  try {
+    await FirebaseAuth.instance.sendPasswordResetEmail(email: email);
+    ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+      content: Text('Password reset email sent!'),
+      duration: Duration(seconds: 3),
+    ));
+  } catch (e) {
+    debugPrint('Failed to send reset email: $e');
+    ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+      content: Text('Failed to send reset email. Please try again later.'),
+      duration: Duration(seconds: 3),
+    ));
+  }
+}
+
 }

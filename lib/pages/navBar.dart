@@ -1,20 +1,20 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:mappo/pages/profile.dart'; // Import your profile.dart file
-import 'package:mappo/pages/login.dart'; // Import the login page to navigate after logout
-import 'package:cloud_firestore/cloud_firestore.dart'; // Import Firestore
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:mappo/pages/profile.dart';
+import 'package:mappo/pages/login.dart';
+import 'package:mappo/pages/MyReviewsPage.dart';
 
 class NavBar extends StatelessWidget {
   const NavBar({super.key});
 
-void signUserOut(BuildContext context) {
-  FirebaseAuth.instance.signOut();
-  Navigator.pushReplacement(
-    context,
-    MaterialPageRoute(builder: (context) => const LoginPage()),
-  );
-}
-
+  void signUserOut(BuildContext context) {
+    FirebaseAuth.instance.signOut();
+    Navigator.pushReplacement(
+      context,
+      MaterialPageRoute(builder: (context) => const LoginPage()),
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -65,7 +65,10 @@ void signUserOut(BuildContext context) {
                   title: const Text('My Reviews'),
                   onTap: () {
                     Navigator.pop(context); // Close the drawer and navigate
-                    // Handle my reviews navigation
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => const MyReviewsPage()),
+                    );
                   },
                 ),
                 ListTile(

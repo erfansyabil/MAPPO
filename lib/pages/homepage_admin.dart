@@ -18,6 +18,7 @@ class _AdminHomePageState extends State<AdminHomePage> {
   TextEditingController txtSearch = TextEditingController();
 
   List<Restaurant> popArr = [];
+  bool isLoading = false;
 
   @override
   void initState() {
@@ -26,12 +27,19 @@ class _AdminHomePageState extends State<AdminHomePage> {
   }
 
   void _fetchRestaurants() {
+    setState(() {
+      isLoading = true;
+    });
     FirebaseFirestore.instance.collection('restaurants').get().then((snapshot) {
       setState(() {
         popArr = snapshot.docs.map((doc) => Restaurant.fromFirestore(doc)).toList();
+        isLoading = false;
       });
     }).catchError((error) {
       debugPrint('Error fetching restaurants: $error');
+      setState(() {
+        isLoading = false;
+      });
     });
   }
 
@@ -73,7 +81,11 @@ class _AdminHomePageState extends State<AdminHomePage> {
                   onView: () {},
                 ),
               ),
-              ListView.builder(
+              isLoading
+                  ? const Center(
+                      child: CircularProgressIndicator(),
+                    )
+                  :ListView.builder(
                 physics: const NeverScrollableScrollPhysics(),
                 shrinkWrap: true,
                 padding: EdgeInsets.zero,

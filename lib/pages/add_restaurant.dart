@@ -10,7 +10,7 @@ import 'package:path/path.dart' as path;
 import 'package:permission_handler/permission_handler.dart';
 
 class AddRestaurantPage extends StatefulWidget {
-  const AddRestaurantPage({Key? key}) : super(key: key);
+  const AddRestaurantPage({super.key});
 
   @override
   State<AddRestaurantPage> createState() => _AddRestaurantPageState();
@@ -26,6 +26,7 @@ class _AddRestaurantPageState extends State<AddRestaurantPage> {
 
   File? _image;
   final ImagePicker _picker = ImagePicker();
+  bool _isLoading = false;
 
   Future<void> _pickImage() async {
     // Request storage permission
@@ -90,6 +91,10 @@ class _AddRestaurantPageState extends State<AddRestaurantPage> {
       return;
     }
 
+    setState(() {
+      _isLoading = true; // Set loading state to true
+    });
+
     try {
       final imageUrl = await _uploadImage(_image!);
       if (imageUrl == null) {
@@ -118,7 +123,11 @@ class _AddRestaurantPageState extends State<AddRestaurantPage> {
       Navigator.pop(context); // Go back to the previous page
     } catch (e) {
       debugPrint('Error adding restaurant: $e');
-    }
+    } finally {
+      setState(() {
+        _isLoading = false; // Set loading state to false
+      });
+  }
   }
 
   @override
@@ -127,7 +136,11 @@ class _AddRestaurantPageState extends State<AddRestaurantPage> {
       appBar: AppBar(
         title: const Text("Add New Restaurant"),
       ),
-      body: SingleChildScrollView(
+      body: _isLoading
+          ? const Center(
+              child: CircularProgressIndicator(),
+            )
+        : SingleChildScrollView(
         child: Padding(
           padding: const EdgeInsets.symmetric(vertical: 20),
           child: Column(

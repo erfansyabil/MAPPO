@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
-import 'navbar.dart';
+import 'package:mappo/pages/navbar.dart';
 import 'package:mappo/common/color_extension.dart';
 import 'package:mappo/common_widget/round_textfield.dart';
-import '../../common_widget/popular_resutaurant_row.dart';
-import '../../common_widget/view_all_title_row.dart';
-import 'restaurant_page.dart';
-import 'package:mappo/pages/restaurant.dart';
+import 'package:mappo/common_widget/popular_restaurant_row.dart';
+import 'package:mappo/common_widget/view_all_title_row.dart';
+import 'package:mappo/pages/classes.dart';
+import 'package:mappo/pages/restaurant_page.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -17,38 +18,23 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
   TextEditingController txtSearch = TextEditingController();
 
-  List<Restaurant> popArr = [
-    Restaurant(
-      id: "1",
-      name: "Minute by tuk tuk",
-      address: "Lorong Haji Taib, Chow Kit, 50350 Kuala Lumpur, Federal Territory of Kuala Lumpur",
-      foodType: "Asian Food",
-      restaurantType: "Cafe",
-      image: "assets/img/res_1.png",
-      rate: "4.7",
-      rating: "200",
-    ),
-    Restaurant(
-      id: "2",
-      name: "Café de Noir",
-      address: "Jalan Kebudayaan 38, Taman Universiti, 81300 Skudai, Johor",
-      foodType: "Western Food",
-      restaurantType: "Cafe",
-      image: "assets/img/res_2.png",
-      rate: "4.9",
-      rating: "104",
-    ),
-    Restaurant(
-      id: "3",
-      name: "Bakes by Tella",
-      address: "2011, Jln Ismail Sultan, Danga Bay Johor bahru, 80200 Johor",
-      foodType: "European Food",
-      restaurantType: "Cafe",
-      image: "assets/img/res_3.png",
-      rate: "4.1",
-      rating: "231",
-    ),
-  ];
+  List<Restaurant> popArr = [];
+
+  @override
+  void initState() {
+    super.initState();
+    _fetchRestaurants();
+  }
+
+  void _fetchRestaurants() {
+    FirebaseFirestore.instance.collection('restaurants').get().then((snapshot) {
+      setState(() {
+        popArr = snapshot.docs.map((doc) => Restaurant.fromFirestore(doc)).toList();
+      });
+    }).catchError((error) {
+      debugPrint('Error fetching restaurants: $error');
+    });
+  }
 
   @override
   Widget build(BuildContext context) {

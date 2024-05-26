@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:mappo/common/color_extension.dart';
-import 'package:mappo/pages/restaurant.dart';
-import 'review.dart';
+import 'package:mappo/pages/classes.dart';
 
 
 class ReviewPage extends StatefulWidget {

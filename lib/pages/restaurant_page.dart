@@ -1,15 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:mappo/common/color_extension.dart';
-import 'package:mappo/pages/restaurant.dart';
+import 'package:mappo/pages/classes.dart';
 import 'review_page.dart';
-
 
 class RestaurantPage extends StatelessWidget {
   final Restaurant restaurant;
 
-
   const RestaurantPage({super.key, required this.restaurant});
-
 
   @override
   Widget build(BuildContext context) {
@@ -28,23 +25,34 @@ class RestaurantPage extends StatelessWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Container(
-                decoration: BoxDecoration(
-                  border: Border.all(
-                    color: TColor.primary,
-                    width: 2.0,
-                  ),
-                  borderRadius: BorderRadius.circular(8.0),
-                ),
-                child: ClipRRect(
-                  borderRadius: BorderRadius.circular(8.0),
-                  child: Image.asset(
-                    restaurant.image,
-                    width: double.infinity,
-                    height: 200,
-                    fit: BoxFit.cover,
-                  ),
-                ),
+              FutureBuilder<String>(
+                future: restaurant.getImageDownloadUrl(),
+                builder: (context, snapshot) {
+                if (snapshot.connectionState == ConnectionState.waiting) {
+                  return const CircularProgressIndicator();
+                } else if (snapshot.hasError) {
+                  return Text('Error loading image: ${snapshot.error}');
+                } else {
+                  return Container(
+                    decoration: BoxDecoration(
+                      border: Border.all(
+                        color: TColor.primary,
+                        width: 2.0,
+                      ),
+                      borderRadius: BorderRadius.circular(8.0),
+                    ),
+                    child: ClipRRect(
+                      borderRadius: BorderRadius.circular(8.0),
+                      child: Image.network(
+                        snapshot.data!, // Use the download URL here
+                        width: double.infinity,
+                        height: 200,
+                        fit: BoxFit.cover,
+                      ),
+                    ),
+                  );
+                }
+                }
               ),
               const SizedBox(height: 12),
               Text(
@@ -179,7 +187,6 @@ class RestaurantPage extends StatelessWidget {
     );
   }
 
-
   Widget _buildInfoRow({required IconData icon, required String label, required String value}) {
     return Row(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -211,6 +218,3 @@ class RestaurantPage extends StatelessWidget {
     );
   }
 }
-
-
-

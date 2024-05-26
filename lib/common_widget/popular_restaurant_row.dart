@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:mappo/common/color_extension.dart';
-import 'package:mappo/pages/restaurant.dart';
+import 'package:mappo/pages/classes.dart';
 
 class PopularRestaurantRow extends StatelessWidget {
   final Restaurant pObj;
@@ -17,15 +17,13 @@ class PopularRestaurantRow extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Image.asset(
-              pObj.image,
+            Image.network(
+              pObj.imageUrl, // Use the imageUrl field from the Restaurant object
               width: double.maxFinite,
               height: 200,
               fit: BoxFit.cover,
             ),
-            const SizedBox(
-              height: 12,
-            ),
+            const SizedBox(height: 12),
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 20),
               child: Column(
@@ -39,9 +37,7 @@ class PopularRestaurantRow extends StatelessWidget {
                       fontWeight: FontWeight.w700,
                     ),
                   ),
-                  const SizedBox(
-                    height: 8,
-                  ),
+                  const SizedBox(height: 8),
                   Row(
                     children: [
                       Image.asset(
@@ -50,9 +46,7 @@ class PopularRestaurantRow extends StatelessWidget {
                         height: 10,
                         fit: BoxFit.cover,
                       ),
-                      const SizedBox(
-                        width: 4,
-                      ),
+                      const SizedBox(width: 4),
                       Text(
                         pObj.rate,
                         style: TextStyle(
@@ -60,9 +54,7 @@ class PopularRestaurantRow extends StatelessWidget {
                           fontSize: 11,
                         ),
                       ),
-                      const SizedBox(
-                        width: 8,
-                      ),
+                      const SizedBox(width: 8),
                       Text(
                         "(${pObj.rating} Ratings)",
                         style: TextStyle(
@@ -70,9 +62,7 @@ class PopularRestaurantRow extends StatelessWidget {
                           fontSize: 11,
                         ),
                       ),
-                      const SizedBox(
-                        width: 8,
-                      ),
+                      const SizedBox(width: 8),
                       Text(
                         pObj.restaurantType,
                         style: TextStyle(

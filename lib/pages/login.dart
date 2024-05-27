@@ -2,7 +2,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:mappo/components/mybutton.dart';
 import 'package:mappo/components/myTextField.dart';
-import 'forgot_password.dart';
+import 'package:mappo/pages/forgotpassword.dart';
 import 'signup.dart';
 import 'auth.dart';
 import 'homepage.dart';
@@ -195,7 +195,7 @@ class _LoginPageState extends State<LoginPage> {
                       Navigator.push(
                         context,
                         MaterialPageRoute(
-                          builder: (context) => const ForgotPassword(),
+                          builder: (context) => ForgotPassword(),
                         ),
                       );
                     },

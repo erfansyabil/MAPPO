@@ -137,7 +137,7 @@ class _SignUpPageState extends State<SignUpPage> {
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: <Widget>[
                       Image.asset(
-                        'assets/img/mappo.png',
+                        'lib/images/mappo.png',
                         height: 150,
                       ),
                       const SizedBox(height: 20),

@@ -124,12 +124,13 @@ class _ProfilePageState extends State<ProfilePage> {
     );
   }
 
+  //buttons nak tukar fucction laterrrrr
   void resetPassword(BuildContext context) async {
     String email = emailController.text;
     try {
       await FirebaseAuth.instance.sendPasswordResetEmail(email: email);
       ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-        content: Text('Email for reset password has been sent'),
+        content: Text('Edit Profile'),
         duration: Duration(seconds: 3),
       ));
     } catch (e) {

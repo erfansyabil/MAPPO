@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:mappo/common/color_extension.dart';
-import 'package:mappo/components/mybutton.dart';
 import 'package:mappo/pages/classes.dart';
 import 'review_page.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -143,17 +142,31 @@ class RestaurantPage extends StatelessWidget {
               const SizedBox(height: 16),
               Divider(color: TColor.secondaryText),
               const SizedBox(height: 16),
-
-              MyButton(
-                onTap: () {
+              ElevatedButton(
+                onPressed: () {
                   Navigator.push(
                     context,
                     MaterialPageRoute(
                       builder: (context) => ReviewPage(restaurant: restaurant),
                     ),
                   );
-                }, 
-                text: "Add review"),
+                },
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: TColor.primary,
+                  padding: const EdgeInsets.symmetric(vertical: 16),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(8),
+                  ),
+                ),
+                child: const Text(
+                  'Add Review',
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontSize: 16,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+              ),
               const SizedBox(height: 16),
               Text(
                 'Reviews',

@@ -28,16 +28,13 @@ class AuthPage extends StatelessWidget {
                 if (roleSnapshot.connectionState == ConnectionState.waiting) {
                   return const Center(child: CircularProgressIndicator());
                 } else if (roleSnapshot.hasError) {
-                  return const LoginPage();
-                  //return const Center(child: Text('Failed to get user role'));
+                  return const Center(child: Text('Failed to get user role'));
                 } else {
                   String? role = roleSnapshot.data;
                   if (role == 'admin') {
                     return const AdminHomePage();
-                  } else if(role == 'customer') {
-                    return const HomePage();
                   } else {
-                    return const LoginPage();
+                    return const HomePage();
                   }
                 }
               },

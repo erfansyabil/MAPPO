@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:mappo/pages/navbar.dart';
+import 'package:mappo/common/color_extension.dart';
 import 'package:mappo/common_widget/round_textfield.dart';
 import 'package:mappo/common_widget/popular_restaurant_row.dart';
 import 'package:mappo/common_widget/view_all_title_row.dart';
@@ -18,7 +19,6 @@ class _HomePageState extends State<HomePage> {
   TextEditingController txtSearch = TextEditingController();
 
   List<Restaurant> popArr = [];
-  bool isLoading = false;
 
   @override
   void initState() {
@@ -27,19 +27,12 @@ class _HomePageState extends State<HomePage> {
   }
 
   void _fetchRestaurants() {
-    setState(() {
-      isLoading = true;
-    });
     FirebaseFirestore.instance.collection('restaurants').get().then((snapshot) {
       setState(() {
         popArr = snapshot.docs.map((doc) => Restaurant.fromFirestore(doc)).toList();
-        isLoading = false;
       });
     }).catchError((error) {
       debugPrint('Error fetching restaurants: $error');
-      setState(() {
-        isLoading = false;
-      });
     });
   }
 
@@ -55,6 +48,47 @@ class _HomePageState extends State<HomePage> {
           padding: const EdgeInsets.symmetric(vertical: 20),
           child: Column(
             children: [
+              const SizedBox(
+                height: 46,
+              ),
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 20),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      "Delivering to",
+                      style: TextStyle(color: TColor.secondaryText, fontSize: 11),
+                    ),
+                    const SizedBox(
+                      height: 6,
+                    ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      children: [
+                        Text(
+                          "Current Location",
+                          style: TextStyle(
+                              color: TColor.secondaryText,
+                              fontSize: 16,
+                              fontWeight: FontWeight.w700),
+                        ),
+                        const SizedBox(
+                          width: 25,
+                        ),
+                        Image.asset(
+                          "assets/img/dropdown.png",
+                          width: 12,
+                          height: 12,
+                        )
+                      ],
+                    )
+                  ],
+                ),
+              ),
+              const SizedBox(
+                height: 20,
+              ),
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 20),
                 child: RoundTextfield(
@@ -81,11 +115,7 @@ class _HomePageState extends State<HomePage> {
                   onView: () {},
                 ),
               ),
-              isLoading
-                  ? const Center(
-                      child: CircularProgressIndicator(),
-                    )
-                  :ListView.builder(
+              ListView.builder(
                 physics: const NeverScrollableScrollPhysics(),
                 shrinkWrap: true,
                 padding: EdgeInsets.zero,

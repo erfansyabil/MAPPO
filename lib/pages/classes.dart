@@ -46,25 +46,27 @@ class Restaurant {
   }
 }
 
-
 class Review {
   final String reviewerName;
   final String comment;
   final double rating;
+  final DateTime timestamp;
 
   Review({
     required this.reviewerName,
     required this.comment,
     required this.rating,
+    required this.timestamp,
   });
 
-  // Factory constructor to create Review object from Firestore document
   factory Review.fromFirestore(DocumentSnapshot doc) {
-    Map<String, dynamic> data = doc.data() as Map<String, dynamic>;
+    Map data = doc.data() as Map<String, dynamic>;
     return Review(
       reviewerName: data['reviewerName'] ?? '',
       comment: data['comment'] ?? '',
-      rating: data['rating']?.toDouble() ?? 0.0,
+      rating: data['rating'].toDouble() ?? 0.0,
+      timestamp: data['timestamp'] != null
+          ? (data['timestamp'] as Timestamp).toDate() : DateTime.now(),
     );
   }
 }

@@ -8,9 +8,8 @@ import 'package:mappo/pages/login.dart'; // Import the login page to navigate af
 import 'package:cloud_firestore/cloud_firestore.dart'; // Import Firestore
 
 class NavBarAdmin extends StatelessWidget {
-  final String userId; // Add userId parameter
 
-  const NavBarAdmin({super.key, required this.userId});
+  const NavBarAdmin({super.key});
 
   void signUserOut(BuildContext context) {
     FirebaseAuth.instance.signOut();
@@ -63,7 +62,7 @@ class NavBarAdmin extends StatelessWidget {
                     Navigator.pop(context); // Close the drawer and navigate
                     Navigator.push(
                       context,
-                      MaterialPageRoute(builder: (context) => AdminHomePage(userId: userId)),
+                      MaterialPageRoute(builder: (context) => const AdminHomePage()),
                     );
                   },
                 ),
@@ -85,7 +84,7 @@ class NavBarAdmin extends StatelessWidget {
                     Navigator.pop(context); // Close the drawer and navigate
                     Navigator.push(
                       context,
-                      MaterialPageRoute(builder: (context) => MyReviewPage(userId: userId)), // Pass userId here
+                      MaterialPageRoute(builder: (context) => const MyReviewsPage()),
                     );
                   },
                 ),

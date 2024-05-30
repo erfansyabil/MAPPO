@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:mappo/pages/homepage.dart';
 import 'package:mappo/pages/login.dart';
 import 'package:mappo/pages/homepage_admin.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
 
 class AuthPage extends StatelessWidget {
   const AuthPage({super.key});
@@ -28,13 +28,15 @@ class AuthPage extends StatelessWidget {
                 if (roleSnapshot.connectionState == ConnectionState.waiting) {
                   return const Center(child: CircularProgressIndicator());
                 } else if (roleSnapshot.hasError) {
-                  return const Center(child: Text('Failed to get user role'));
+                  return const LoginPage();
                 } else {
                   String? role = roleSnapshot.data;
                   if (role == 'admin') {
                     return const AdminHomePage();
-                  } else {
+                  } else if (role == 'customer') {
                     return const HomePage();
+                  } else {
+                    return const LoginPage();
                   }
                 }
               },
@@ -54,8 +56,7 @@ class FirebaseAuthService {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
 
   // Sign up with email and password and assign role
-  Future<User?> signUpWithEmailAndPassword(
-      String email, String password, String role) async {
+  Future<User?> signUpWithEmailAndPassword(String email, String password, String role) async {
     try {
       UserCredential credential = await _auth.createUserWithEmailAndPassword(
         email: email,
@@ -83,8 +84,7 @@ class FirebaseAuthService {
   }
 
   // Add user details
-  Future<void> addUserDetails(String uid, String name, String username,
-      String email, int phone, String role) async {
+  Future<void> addUserDetails(String uid, String name, String username, String email, int phone, String role) async {
     await _firestore.collection('users').doc(uid).set({
       'name': name,
       'username': username,
@@ -95,8 +95,7 @@ class FirebaseAuthService {
   }
 
   // Sign in with email and password
-  Future<User?> signInWithEmailAndPassword(
-      String email, String password) async {
+  Future<User?> signInWithEmailAndPassword(String email, String password) async {
     try {
       UserCredential credential = await _auth.signInWithEmailAndPassword(
         email: email,
@@ -116,8 +115,7 @@ class FirebaseAuthService {
   Future<String?> getUserRole() async {
     User? user = _auth.currentUser;
     if (user != null) {
-      DocumentSnapshot doc =
-          await _firestore.collection('users').doc(user.uid).get();
+      DocumentSnapshot doc = await _firestore.collection('users').doc(user.uid).get();
       return doc['role'] as String?;
     }
     return null;

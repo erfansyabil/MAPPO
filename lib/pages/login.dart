@@ -43,8 +43,10 @@ class _LoginPageState extends State<LoginPage> {
 
     if (!mounted) return;
 
+    // Show loading indicator
     showDialog(
       context: context,
+      barrierDismissible: false,
       builder: (context) {
         return const Center(
           child: CircularProgressIndicator(),
@@ -53,74 +55,129 @@ class _LoginPageState extends State<LoginPage> {
     );
 
     try {
-      await FirebaseAuth.instance.signInWithEmailAndPassword(
-        email: emailController.text,
-        password: passwordController.text,
+      User? user = await authService.signInWithEmailAndPassword(
+        emailController.text,
+        passwordController.text,
       );
 
-      if (!mounted) return;
-      Navigator.of(context).pop();
+      Navigator.of(context).pop(); // Remove loading dialog
 
-      // Get user role
-      String? role = await authService.getUserRole();
-      if (role != null) {
-        // Navigate based on user role
-        if (role == 'admin') {
-          if (!mounted) return;
-          Navigator.pushReplacement(
-            context,
-            MaterialPageRoute(builder: (context) => const AdminHomePage()),
-          );
+      if (user != null) {
+        // Fetch user role
+        String? role = await authService.getUserRole();
+
+        if (role != null) {
+          if (role == 'admin') {
+            Navigator.pushReplacement(
+              context,
+              MaterialPageRoute(
+                builder: (context) => const AdminHomePage(),
+              ),
+            );
+          } else {
+            Navigator.pushReplacement(
+              context,
+              MaterialPageRoute(
+                builder: (context) => const HomePage(),
+              ),
+            );
+          }
         } else {
-          if (!mounted) return;
-          Navigator.pushReplacement(
-            context,
-            MaterialPageRoute(builder: (context) => const HomePage()),
-          );
+          roleInvalid();
         }
-      } else {
-        roleInvalid();
       }
     } on FirebaseAuthException catch (e) {
-      if (e.code == 'invalid-email') {
+      Navigator.of(context).pop(); // Remove loading dialog
+
+      if (e.code == 'user-not-found') {
         wrongEmailMessage();
       } else if (e.code == 'wrong-password') {
         wrongPasswordMessage();
+      } else {
+        showErrorDialog(e.message ?? 'An unknown error occurred.');
       }
+    } catch (e) {
+      Navigator.of(context).pop(); // Remove loading dialog
+
+      showErrorDialog(e.toString());
     }
   }
 
-  void wrongEmailMessage() {
-    if (!mounted) return;
+  void showErrorDialog(String message) {
     showDialog(
       context: context,
       builder: (context) {
-        return const AlertDialog(
-          title: Text('Incorrect Email'),
+        return AlertDialog(
+          title: const Text('Error'),
+          content: Text(message),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+              child: const Text('OK'),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  void wrongEmailMessage() {
+    showDialog(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          title: const Text('Incorrect/Not exist Email'),
+          content: const Text('The email address entered is invalid/not exist.'),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+              child: const Text('OK'),
+            ),
+          ],
         );
       },
     );
   }
 
   void wrongPasswordMessage() {
-    if (!mounted) return;
     showDialog(
       context: context,
       builder: (context) {
-        return const AlertDialog(
-          title: Text('Incorrect Password'),
+        return AlertDialog(
+          title: const Text('Incorrect Password'),
+          content: const Text('The password entered is incorrect.'),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+              child: const Text('OK'),
+            ),
+          ],
         );
       },
     );
   }
 
   void roleInvalid() {
-    if (!mounted) return;
     showDialog(
       context: context,
       builder: (context) {
-        return const AlertDialog(
-          title: Text('Role Invalid'),
+        return AlertDialog(
+          title: const Text('Role Invalid'),
+          content: const Text('Your user role is not valid.'),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+              child: const Text('OK'),
+            ),
+          ],
         );
       },
     );
@@ -135,8 +192,7 @@ class _LoginPageState extends State<LoginPage> {
   Widget build(BuildContext context) {
     return MaterialApp(
       routes: {
-        '/signup': (context) =>
-            const SignUpPage(), // Define the '/signup' route
+        '/signup': (context) => const SignUpPage(), // Define the '/signup' route
       },
       home: Scaffold(
         resizeToAvoidBottomInset: true,

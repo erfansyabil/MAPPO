@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:mappo/common/color_extension.dart';
 import 'package:mappo/pages/classes.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
 class ReviewPage extends StatefulWidget {
   final Restaurant restaurant;
@@ -14,22 +15,61 @@ class ReviewPage extends StatefulWidget {
 
 class _ReviewPageState extends State<ReviewPage> {
   final _formKey = GlobalKey<FormState>();
-  final TextEditingController _nameController = TextEditingController();
+  final TextEditingController usernameController = TextEditingController();
   final TextEditingController _commentController = TextEditingController();
   double _rating = 0.0;
+
+  User? user = FirebaseAuth.instance.currentUser;
+  bool isLoading = true;
+
+  @override
+  void initState() {
+    super.initState();
+    if (user != null) {
+      _fetchUserName();
+    }
+  }
+
+    Future<void> _fetchUserName() async {
+    try {
+      DocumentSnapshot userDoc = await FirebaseFirestore.instance
+          .collection('users')
+          .doc(user!.uid)
+          .get();
+
+      if (userDoc.exists) {
+        Map<String, dynamic> data = userDoc.data() as Map<String, dynamic>;
+        setState(() {
+          usernameController.text = data['username'] ?? '';
+          isLoading = false;
+        });
+      } else  {
+        debugPrint('User document does not exist'); 
+        setState(() {
+          isLoading = false;
+          });
+      }
+    } catch (e) {
+      debugPrint('Error fetching user data: $e');
+      setState(() {
+        isLoading = false;
+      });
+    }
+  }
 
   Future<void> _addReview() async {
     if (_formKey.currentState!.validate()) {
       try {
         await FirebaseFirestore.instance.collection('restaurants').doc(widget.restaurant.id).collection('reviews').add({
-          'reviewerName': _nameController.text,
+          'reviewerName': usernameController.text, 
           'comment': _commentController.text,
           'rating': _rating,
           'timestamp': FieldValue.serverTimestamp(),
+          'userId': user!.uid,
         });
         Navigator.pop(context);
       } catch (e) {
-        print('Error adding review: $e');
+        debugPrint('Error adding review: $e');
       }
     }
   }
@@ -64,26 +104,6 @@ class _ReviewPageState extends State<ReviewPage> {
                 key: _formKey,
                 child: Column(
                   children: [
-                    TextFormField(
-                      controller: _nameController,
-                      decoration: InputDecoration(
-                        labelText: 'Your Name',
-                        labelStyle: TextStyle(color: TColor.primaryText),
-                        enabledBorder: UnderlineInputBorder(
-                          borderSide: BorderSide(color: TColor.primary),
-                        ),
-                        focusedBorder: UnderlineInputBorder(
-                          borderSide: BorderSide(color: TColor.primary),
-                        ),
-                      ),
-                      validator: (value) {
-                        if (value == null || value.isEmpty) {
-                          return 'Please enter your name';
-                        }
-                        return null;
-                      },
-                    ),
-                    const SizedBox(height: 16),
                     TextFormField(
                       controller: _commentController,
                       decoration: InputDecoration(

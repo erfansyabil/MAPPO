@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:mappo/components/mybutton.dart';
 import 'package:mappo/components/myTextField.dart';
-import 'package:mappo/components/myDropdown.dart'; // Import MyDropdown
+import 'package:mappo/components/myDropdown.dart';
 import 'verify_email.dart';
 import 'auth.dart';
 
@@ -20,8 +20,7 @@ class _SignUpPageState extends State<SignUpPage> {
   final TextEditingController usernameController = TextEditingController();
   final TextEditingController emailController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
-  final TextEditingController confirmPasswordController =
-      TextEditingController();
+  final TextEditingController confirmPasswordController = TextEditingController();
   final TextEditingController phoneController = TextEditingController();
 
   bool _isEmailValid = true;
@@ -125,7 +124,8 @@ class _SignUpPageState extends State<SignUpPage> {
       backgroundColor: const Color.fromARGB(255, 255, 255, 255),
       appBar: AppBar(
         backgroundColor: const Color.fromARGB(255, 255, 255, 255),
-        title: const Text('Sign Up'),
+        title: const Text('Sign Up', style: TextStyle(color: Colors.black)),
+        iconTheme: const IconThemeData(color: Colors.black),
       ),
       body: SafeArea(
         child: _isLoading
@@ -137,7 +137,7 @@ class _SignUpPageState extends State<SignUpPage> {
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: <Widget>[
                       Image.asset(
-                        'lib/images/mappo.png',
+                        'assets/img/mappo.png',
                         height: 150,
                       ),
                       const SizedBox(height: 20),
@@ -190,8 +190,7 @@ class _SignUpPageState extends State<SignUpPage> {
                         icon: const Icon(Icons.lock),
                         onChanged: (value) {
                           setState(() {
-                            _doPasswordsMatch = passwordController.text ==
-                                confirmPasswordController.text;
+                            _doPasswordsMatch = passwordController.text == confirmPasswordController.text;
                           });
                         },
                       ),
@@ -220,12 +219,8 @@ class _SignUpPageState extends State<SignUpPage> {
                       MyDropdown(
                         hintText: 'Select Role',
                         icon: const Icon(Icons.arrow_drop_down),
-                        items: const [
-                          'customer',
-                          'admin'
-                        ], // Ensure there are no duplicate items
-                        value:
-                            _selectedRole.isEmpty ? 'customer' : _selectedRole,
+                        items: const ['customer', 'admin'],
+                        value: _selectedRole.isEmpty ? 'customer' : _selectedRole,
                         onChanged: (String? newValue) {
                           setState(() {
                             _selectedRole = newValue!;
@@ -244,8 +239,7 @@ class _SignUpPageState extends State<SignUpPage> {
                           const Text("Already have an account?"),
                           TextButton(
                             onPressed: () {
-                              Navigator.pop(
-                                  context); // Navigate back to login page
+                              Navigator.pop(context); // Navigate back to login page
                             },
                             child: Text(
                               'Log In',

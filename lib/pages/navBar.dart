@@ -3,7 +3,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:mappo/pages/profile.dart';
 import 'package:mappo/pages/login.dart';
-import 'package:mappo/pages/MyReviewsPage.dart';
+import 'package:mappo/pages/my_reviews.dart';
 
 class NavBar extends StatelessWidget {
   const NavBar({super.key});

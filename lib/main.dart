@@ -2,9 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:mappo/pages/auth.dart';
 import 'package:mappo/pages/homepage.dart';
 import 'package:mappo/pages/homepage_admin.dart';
-import 'pages/signup.dart'; // Import your sign-up page file
+import 'package:mappo/pages/my_reviews.dart';
+import 'pages/signup.dart'; 
 import 'package:firebase_core/firebase_core.dart';
 import 'firebase_options.dart';
+
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -33,6 +35,7 @@ class MyApp extends StatelessWidget {
             const SignUpPage(), // Define the '/signup' route
         '/home': (context) => const HomePage(),
         '/home_admin': (context) => const AdminHomePage(),
+        '/my_review': (context) => const MyReviewsPage(),
         // Add other routes if needed
       },
     );

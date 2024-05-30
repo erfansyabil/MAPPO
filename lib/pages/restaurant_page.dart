@@ -3,6 +3,7 @@ import 'package:mappo/common/color_extension.dart';
 import 'package:mappo/pages/classes.dart';
 import 'review_page.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:intl/intl.dart'; // Add this import for formatting the timestamp
 
 class RestaurantPage extends StatelessWidget {
   final Restaurant restaurant;
@@ -27,33 +28,33 @@ class RestaurantPage extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               FutureBuilder<String>(
-                  future: restaurant.getImageDownloadUrl(),
-                  builder: (context, snapshot) {
-                    if (snapshot.connectionState == ConnectionState.waiting) {
-                      return const CircularProgressIndicator();
-                    } else if (snapshot.hasError) {
-                      return Text('Error loading image: ${snapshot.error}');
-                    } else {
-                      return Container(
-                        decoration: BoxDecoration(
-                          border: Border.all(
-                            color: TColor.primary,
-                            width: 2.0,
-                          ),
-                          borderRadius: BorderRadius.circular(8.0),
+                future: restaurant.getImageDownloadUrl(),
+                builder: (context, snapshot) {
+                  if (snapshot.connectionState == ConnectionState.waiting) {
+                    return const CircularProgressIndicator();
+                  } else if (snapshot.hasError) {
+                    return Text('Error loading image: ${snapshot.error}');
+                  } else {
+                    return Container(
+                      decoration: BoxDecoration(
+                        border: Border.all(
+                          color: TColor.primary,
+                          width: 2.0,
                         ),
-                        child: ClipRRect(
-                          borderRadius: BorderRadius.circular(8.0),
-                          child: Image.network(
-                            snapshot.data!, // Use the download URL here
-                            width: double.infinity,
-                            height: 200,
-                            fit: BoxFit.cover,
-                          ),
+                        borderRadius: BorderRadius.circular(8.0),
+                      ),
+                      child: ClipRRect(
+                        borderRadius: BorderRadius.circular(8.0),
+                        child: Image.network(
+                          snapshot.data!,
+                          width: double.infinity,
+                          height: 200,
+                          fit: BoxFit.cover,
                         ),
-                      );
-                    }
+                      ),
+                    );
                   }
+                },
               ),
               const SizedBox(height: 12),
               Text(
@@ -196,7 +197,19 @@ class RestaurantPage extends StatelessWidget {
                         Review review = Review.fromFirestore(doc);
                         return ListTile(
                           title: Text(review.reviewerName),
-                          subtitle: Text(review.comment),
+                          subtitle: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(review.comment),
+                              Text(
+                                'Posted on: ${DateFormat('yyyy-MM-dd – kk:mm').format(review.timestamp)}',
+                                style: TextStyle(
+                                  fontSize: 12,
+                                  color: TColor.secondaryText,
+                                ),
+                              ),
+                            ],
+                          ),
                           trailing: Text('${review.rating} ★'),
                         );
                       }).toList(),

@@ -5,10 +5,10 @@ import 'package:mappo/pages/homepage_admin.dart';
 import 'package:mappo/pages/my_reviews.dart';
 import 'package:mappo/pages/profile.dart'; // Import your profile.dart file
 import 'package:mappo/pages/login.dart'; // Import the login page to navigate after logout
+import 'package:mappo/pages/update_restaurant.dart'; // Import the update restaurant page
 import 'package:cloud_firestore/cloud_firestore.dart'; // Import Firestore
 
 class NavBarAdmin extends StatelessWidget {
-
   const NavBarAdmin({super.key});
 
   void signUserOut(BuildContext context) {
@@ -104,6 +104,21 @@ class NavBarAdmin extends StatelessWidget {
                     Navigator.push(
                       context,
                       MaterialPageRoute(builder: (context) => const ProfilePage()),
+                    );
+                  },
+                ),
+                ListTile(
+                  leading: const Icon(Icons.update),
+                  title: const Text('Update Restaurant'),
+                  onTap: () async {
+                    Navigator.pop(context); // Close the drawer and navigate
+                    // Assuming you have a way to select which restaurant to update
+                    // For example, you can show a dialog to pick a restaurant or navigate to a list
+                    // Here, just hardcoding an example restaurant ID for simplicity
+                    String restaurantId = "exampleRestaurantId"; // Replace with actual restaurant ID logic
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => UpdateRestaurantPage()),
                     );
                   },
                 ),

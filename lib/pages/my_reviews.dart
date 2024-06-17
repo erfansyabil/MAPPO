@@ -10,7 +10,7 @@ class MyReviewsPage extends StatelessWidget {
 Future<List<Restaurant>> _getReviewedRestaurants() async {
     User? user = FirebaseAuth.instance.currentUser;
     if (user == null) {
-      print('No user is logged in.');
+      debugPrint('No user is logged in.');
       return [];
     }
 
@@ -27,7 +27,7 @@ Future<List<Restaurant>> _getReviewedRestaurants() async {
       }
     }
 
-    print('Total Restaurants Reviewed: ${reviewedRestaurants.length}'); // Debug print
+    debugPrint('Total Restaurants Reviewed: ${reviewedRestaurants.length}'); // Debug print
 
     return reviewedRestaurants;
   }

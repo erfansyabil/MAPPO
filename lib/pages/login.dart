@@ -22,6 +22,76 @@ class _LoginPageState extends State<LoginPage> {
 
   FirebaseAuthService authService = FirebaseAuthService();
 
+void signIn() async {
+  if (!_validateEmail(emailController.text)) {
+    setState(() {
+      _isEmailValid = false;
+    });
+    return;
+  } else {
+    setState(() {
+      _isEmailValid = true;
+    });
+  }
+
+  // Show loading indicator
+  showDialog(
+    context: context,
+    barrierDismissible: false,
+    builder: (context) {
+      return const Center(
+        child: CircularProgressIndicator(),
+      );
+    },
+  );
+
+  try {
+    User? user = await authService.signInWithEmailAndPassword(
+      emailController.text,
+      passwordController.text,
+    );
+
+    if (mounted) {
+        Navigator.of(context).pop(); // Remove loading dialog
+
+    if (user != null) {
+      // Fetch user role
+      String? role = await authService.getUserRole();
+
+      if (role != null) {
+        if (role == 'admin') {
+          Navigator.pushReplacement(
+            context,
+            MaterialPageRoute(
+              builder: (context) => const AdminHomePage(),
+            ),
+          );
+        } else {
+          Navigator.pushReplacement(
+            context,
+            MaterialPageRoute(
+              builder: (context) => const HomePage(),
+            ),
+          );
+        }
+      } else {
+        roleInvalid();
+      }
+    }
+    }
+  } on FirebaseAuthException catch (e) {
+      if (mounted) {
+        Navigator.of(context).pop(); // Remove loading dialog
+        _handleFirebaseAuthException(e);
+      }
+  } catch (e) {
+      if (mounted) {
+        Navigator.of(context).pop(); // Remove loading dialog
+        showErrorDialog(e.toString());
+      }
+  }
+}
+
   @override
   void dispose() {
     emailController.dispose();
@@ -29,158 +99,118 @@ class _LoginPageState extends State<LoginPage> {
     super.dispose();
   }
 
-  void signIn() async {
-    if (!_validateEmail(emailController.text)) {
-      setState(() {
-        _isEmailValid = false;
-      });
-      return;
-    } else {
-      setState(() {
-        _isEmailValid = true;
-      });
-    }
+void _handleFirebaseAuthException(FirebaseAuthException e) {
+  if (e.code == 'user-not-found') {
+    wrongEmailMessage();
+  } else if (e.code == 'wrong-password') {
+    debugPrint("Wrong Password");
+    wrongPasswordMessage();
+  } else if (e.code == 'invalid-email') {
+    debugPrint("Wrong Email");
+    showErrorDialog('The email address is not valid.');
+  } else if (e.code == 'user-disabled') {
+    debugPrint("User BANNED");
+    showErrorDialog('This user has been disabled.');
+  } else if (e.code == 'too-many-requests') {
+    debugPrint("Too Many Requests");
+    showErrorDialog('Too many requests. Please try again later.');
+  } else {
+    debugPrint("Unknown Error");
+    showErrorDialog(e.message ?? 'An unknown error occurred.');
+  }
+}
 
-    if (!mounted) return;
-
-    // Show loading indicator
-    showDialog(
-      context: context,
-      barrierDismissible: false,
-      builder: (context) {
-        return const Center(
-          child: CircularProgressIndicator(),
-        );
-      },
-    );
-
-    try {
-      User? user = await authService.signInWithEmailAndPassword(
-        emailController.text,
-        passwordController.text,
+void showErrorDialog(String message) {
+    if (mounted) {
+      Navigator.of(context).pop(); // Remove loading dialog if still mounted
+      showDialog(
+        context: context,
+        builder: (context) {
+          return AlertDialog(
+            title: const Text('Error'),
+            content: Text(message),
+            actions: [
+              TextButton(
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+                child: const Text('OK'),
+              ),
+            ],
+          );
+        },
       );
-
-      Navigator.of(context).pop(); // Remove loading dialog
-
-      if (user != null) {
-        // Fetch user role
-        String? role = await authService.getUserRole();
-
-        if (role != null) {
-          if (role == 'admin') {
-            Navigator.pushReplacement(
-              context,
-              MaterialPageRoute(
-                builder: (context) => const AdminHomePage(),
-              ),
-            );
-          } else {
-            Navigator.pushReplacement(
-              context,
-              MaterialPageRoute(
-                builder: (context) => const HomePage(),
-              ),
-            );
-          }
-        } else {
-          roleInvalid();
-        }
-      }
-    } on FirebaseAuthException catch (e) {
-      Navigator.of(context).pop(); // Remove loading dialog
-
-      if (e.code == 'user-not-found') {
-        wrongEmailMessage();
-      } else if (e.code == 'wrong-password') {
-        wrongPasswordMessage();
-      } else {
-        showErrorDialog(e.message ?? 'An unknown error occurred.');
-      }
-    } catch (e) {
-      Navigator.of(context).pop(); // Remove loading dialog
-
-      showErrorDialog(e.toString());
     }
   }
 
-  void showErrorDialog(String message) {
-    showDialog(
-      context: context,
-      builder: (context) {
-        return AlertDialog(
-          title: const Text('Error'),
-          content: Text(message),
-          actions: [
-            TextButton(
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
-              child: const Text('OK'),
-            ),
-          ],
-        );
-      },
-    );
+
+void wrongEmailMessage() {
+    if (mounted) {
+      Navigator.of(context).pop(); // Remove loading dialog if still mounted
+      showDialog(
+        context: context,
+        builder: (context) {
+          return AlertDialog(
+            title: const Text('Incorrect/Not exist Email'),
+            content: const Text('The email address entered is invalid/not exist.'),
+            actions: [
+              TextButton(
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+                child: const Text('OK'),
+              ),
+            ],
+          );
+        },
+      );
+    }
   }
 
-  void wrongEmailMessage() {
-    showDialog(
-      context: context,
-      builder: (context) {
-        return AlertDialog(
-          title: const Text('Incorrect/Not exist Email'),
-          content: const Text('The email address entered is invalid/not exist.'),
-          actions: [
-            TextButton(
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
-              child: const Text('OK'),
-            ),
-          ],
-        );
-      },
-    );
+void wrongPasswordMessage() {
+    if (mounted) {
+      Navigator.of(context).pop(); // Remove loading dialog if still mounted
+      showDialog(
+        context: context,
+        builder: (context) {
+          return AlertDialog(
+            title: const Text('Incorrect Password'),
+            content: const Text('The password entered is incorrect.'),
+            actions: [
+              TextButton(
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+                child: const Text('OK'),
+              ),
+            ],
+          );
+        },
+      );
+    }
   }
 
-  void wrongPasswordMessage() {
-    showDialog(
-      context: context,
-      builder: (context) {
-        return AlertDialog(
-          title: const Text('Incorrect Password'),
-          content: const Text('The password entered is incorrect.'),
-          actions: [
-            TextButton(
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
-              child: const Text('OK'),
-            ),
-          ],
-        );
-      },
-    );
-  }
-
-  void roleInvalid() {
-    showDialog(
-      context: context,
-      builder: (context) {
-        return AlertDialog(
-          title: const Text('Role Invalid'),
-          content: const Text('Your user role is not valid.'),
-          actions: [
-            TextButton(
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
-              child: const Text('OK'),
-            ),
-          ],
-        );
-      },
-    );
+void roleInvalid() {
+    if (mounted) {
+      Navigator.of(context).pop(); // Remove loading dialog if still mounted
+      showDialog(
+        context: context,
+        builder: (context) {
+          return AlertDialog(
+            title: const Text('Role Invalid'),
+            content: const Text('Your user role is not valid.'),
+            actions: [
+              TextButton(
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+                child: const Text('OK'),
+              ),
+            ],
+          );
+        },
+      );
+    }
   }
 
   bool _validateEmail(String email) {

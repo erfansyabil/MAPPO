@@ -109,21 +109,6 @@ class NavBarAdmin extends StatelessWidget {
                   },
                 ),
                 ListTile(
-                  leading: const Icon(Icons.update),
-                  title: const Text('Update Restaurant'),
-                  onTap: () async {
-                    Navigator.pop(context); // Close the drawer and navigate
-                    // Assuming you have a way to select which restaurant to update
-                    // For example, you can show a dialog to pick a restaurant or navigate to a list
-                    // Here, just hardcoding an example restaurant ID for simplicity
-                    String restaurantId = "exampleRestaurantId"; // Replace with actual restaurant ID logic
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(builder: (context) => UpdateRestaurantPage()),
-                    );
-                  },
-                ),
-                ListTile(
                   leading: const Icon(Icons.delete),
                   title: const Text('Delete Restaurant'),
                   onTap: () {

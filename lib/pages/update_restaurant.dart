@@ -6,28 +6,43 @@ import 'package:image_picker/image_picker.dart';
 import 'package:mappo/common/color_extension.dart';
 import 'package:mappo/components/myTextField.dart';
 import 'package:mappo/components/myButton.dart';
+import 'package:mappo/pages/classes.dart';
 import 'package:path/path.dart' as path;
 import 'package:permission_handler/permission_handler.dart';
 
 class UpdateRestaurantPage extends StatefulWidget {
-  const UpdateRestaurantPage({Key? key}) : super(key: key);
+  final Restaurant restaurant;
+
+  const UpdateRestaurantPage({super.key, required this.restaurant});
 
   @override
   _UpdateRestaurantPageState createState() => _UpdateRestaurantPageState();
 }
 
 class _UpdateRestaurantPageState extends State<UpdateRestaurantPage> {
-  final TextEditingController _idController = TextEditingController();
-  final TextEditingController _nameController = TextEditingController();
-  final TextEditingController _addressController = TextEditingController();
-  final TextEditingController _foodTypeController = TextEditingController();
-  final TextEditingController _restaurantTypeController = TextEditingController();
-  final TextEditingController _rateController = TextEditingController();
-  final TextEditingController _ratingController = TextEditingController();
+  late TextEditingController _idController;
+  late TextEditingController _nameController;
+  late TextEditingController _addressController;
+  late TextEditingController _foodTypeController;
+  late TextEditingController _restaurantTypeController;
+  late TextEditingController _rateController;
+  late TextEditingController _ratingController;
 
   File? _image;
   final ImagePicker _picker = ImagePicker();
   bool _isLoading = false;
+
+  @override
+  void initState() {
+    super.initState();
+    _idController = TextEditingController(text: widget.restaurant.id);
+    _nameController = TextEditingController(text: widget.restaurant.name);
+    _addressController = TextEditingController(text: widget.restaurant.address);
+    _foodTypeController = TextEditingController(text: widget.restaurant.foodType);
+    _restaurantTypeController = TextEditingController(text: widget.restaurant.restaurantType);
+    _rateController = TextEditingController(text: widget.restaurant.rate);
+    _ratingController = TextEditingController(text: widget.restaurant.rating.toString());
+  }
 
   Future<void> _pickImage() async {
     var status = await Permission.storage.request();
@@ -168,6 +183,7 @@ class _UpdateRestaurantPageState extends State<UpdateRestaurantPage> {
                       hintText: "Restaurant ID",
                       obscureText: false,
                       icon: const Icon(Icons.perm_identity),
+                      readOnly: true,
                     ),
                     const SizedBox(height: 10),
                     MyTextField(
@@ -244,8 +260,7 @@ class _UpdateRestaurantPageState extends State<UpdateRestaurantPage> {
                     const SizedBox(height: 20),
                     MyButton(
                       onTap: () {
-                        String restaurantId = _idController.text;
-                        updateRestaurant(restaurantId);
+                        updateRestaurant(widget.restaurant.id);
                       },
                       text: "Update",
                     ),

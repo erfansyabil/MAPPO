@@ -7,6 +7,7 @@ import 'package:mappo/pages/profile.dart'; // Import your profile.dart file
 import 'package:mappo/pages/login.dart'; // Import the login page to navigate after logout
 import 'package:mappo/pages/update_restaurant.dart'; // Import the update restaurant page
 import 'package:cloud_firestore/cloud_firestore.dart'; // Import Firestore
+import 'package:mappo/pages/delete_restaurant.dart'; // Import the delete restaurant page
 
 class NavBarAdmin extends StatelessWidget {
   const NavBarAdmin({super.key});
@@ -119,6 +120,17 @@ class NavBarAdmin extends StatelessWidget {
                     Navigator.push(
                       context,
                       MaterialPageRoute(builder: (context) => UpdateRestaurantPage()),
+                    );
+                  },
+                ),
+                ListTile(
+                  leading: const Icon(Icons.delete),
+                  title: const Text('Delete Restaurant'),
+                  onTap: () {
+                    Navigator.pop(context); // Close the drawer and navigate
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => const DeleteRestaurantPage()),
                     );
                   },
                 ),

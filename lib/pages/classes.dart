@@ -47,12 +47,14 @@ class Restaurant {
 }
 
 class Review {
+  final String id;
   final String reviewerName;
   final String comment;
   final double rating;
-  final DateTime timestamp;
+  final Timestamp timestamp;
 
   Review({
+    required this.id,
     required this.reviewerName,
     required this.comment,
     required this.rating,
@@ -60,13 +62,13 @@ class Review {
   });
 
   factory Review.fromFirestore(DocumentSnapshot doc) {
-    Map data = doc.data() as Map<String, dynamic>;
+    Map<String, dynamic> data = doc.data() as Map<String, dynamic>;
     return Review(
+      id: doc.id, // Initialize the id field with the document ID
       reviewerName: data['reviewerName'] ?? '',
       comment: data['comment'] ?? '',
-      rating: data['rating'].toDouble() ?? 0.0,
-      timestamp: data['timestamp'] != null
-          ? (data['timestamp'] as Timestamp).toDate() : DateTime.now(),
+      rating: data['rating']?.toDouble() ?? 0.0,
+      timestamp: data['timestamp'] ?? Timestamp.now(),
     );
   }
 }

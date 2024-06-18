@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:mappo/common/color_extension.dart';
 import 'package:mappo/pages/classes.dart';
-import 'review_page.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:intl/intl.dart'; // Add this import for formatting the timestamp
+import 'package:intl/intl.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'review_page.dart';
 
 class RestaurantPage extends StatelessWidget {
   final Restaurant restaurant;
@@ -12,6 +13,8 @@ class RestaurantPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    String currentUserId = FirebaseAuth.instance.currentUser!.uid;
+
     return Scaffold(
       appBar: AppBar(
         title: Text(
@@ -134,49 +137,18 @@ class RestaurantPage extends StatelessWidget {
                 label: 'Type of Food',
                 value: restaurant.foodType,
               ),
-              const SizedBox(height: 8),
-              _buildInfoRow(
-                icon: Icons.storefront,
-                label: 'Type of Restaurant',
-                value: restaurant.restaurantType,
-              ),
               const SizedBox(height: 16),
               Divider(color: TColor.secondaryText),
               const SizedBox(height: 16),
-              ElevatedButton(
-                onPressed: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => ReviewPage(restaurant: restaurant),
-                    ),
-                  );
-                },
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: TColor.primary,
-                  padding: const EdgeInsets.symmetric(vertical: 16),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(8),
-                  ),
-                ),
-                child: const Text(
-                  'Add Review',
-                  style: TextStyle(
-                    color: Colors.white,
-                    fontSize: 16,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-              ),
-              const SizedBox(height: 16),
               Text(
-                'Reviews',
+                "Reviews",
                 style: TextStyle(
                   color: TColor.primaryText,
-                  fontSize: 20,
-                  fontWeight: FontWeight.bold,
+                  fontSize: 18,
+                  fontWeight: FontWeight.w600,
                 ),
               ),
+              const SizedBox(height: 8),
               StreamBuilder<QuerySnapshot>(
                 stream: FirebaseFirestore.instance
                     .collection('restaurants')
@@ -185,58 +157,118 @@ class RestaurantPage extends StatelessWidget {
                     .orderBy('timestamp', descending: true)
                     .snapshots(),
                 builder: (context, snapshot) {
-                  if (snapshot.connectionState == ConnectionState.waiting) {
+                  if (!snapshot.hasData) {
                     return const CircularProgressIndicator();
-                  } else if (snapshot.hasError) {
-                    return Text('Error loading reviews: ${snapshot.error}');
-                  } else if (!snapshot.hasData || snapshot.data!.docs.isEmpty) {
-                    return const Text('No reviews yet.');
-                  } else {
-                    return Column(
-                      children: snapshot.data!.docs.map((doc) {
-                        Review review = Review.fromFirestore(doc);
-                        return ListTile(
-                          title: Text(review.reviewerName),
+                  }
+
+                  final reviews = snapshot.data!.docs;
+
+                  return ListView.builder(
+                    shrinkWrap: true,
+                    physics: const NeverScrollableScrollPhysics(),
+                    itemCount: reviews.length,
+                    itemBuilder: (context, index) {
+                      final review = reviews[index];
+                      final reviewerName = review['reviewerName'] ?? 'Anonymous';
+                      final comment = review['comment'];
+                      final rating = review['rating'].toString();
+                      final timestamp = (review['timestamp'] as Timestamp).toDate();
+                      final userId = review['userId'];
+
+                      return Card(
+                        margin: const EdgeInsets.symmetric(vertical: 8.0),
+                        child: ListTile(
+                          title: Text(
+                            reviewerName,
+                            style: TextStyle(
+                              color: TColor.primaryText,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
                           subtitle: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              Text(review.comment),
+                              const SizedBox(height: 4),
                               Text(
-                                'Posted on: ${DateFormat('yyyy-MM-dd – kk:mm').format(review.timestamp)}',
+                                comment,
                                 style: TextStyle(
-                                  fontSize: 12,
+                                  color: TColor.secondaryText,
+                                ),
+                              ),
+                              const SizedBox(height: 4),
+                              Text(
+                                'Rating: $rating',
+                                style: TextStyle(
+                                  color: TColor.primary,
+                                ),
+                              ),
+                              const SizedBox(height: 4),
+                              Text(
+                                'Date: ${DateFormat.yMMMd().format(timestamp)}',
+                                style: TextStyle(
                                   color: TColor.secondaryText,
                                 ),
                               ),
                             ],
                           ),
-                          trailing: Text('${review.rating} ★'),
-                        );
-                      }).toList(),
-                    );
-                  }
+                          trailing: userId == currentUserId
+                              ? Row(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              IconButton(
+                                icon: const Icon(Icons.edit),
+                                onPressed: () {
+                                  _showEditReviewDialog(context, review);
+                                },
+                              ),
+                              IconButton(
+                                icon: const Icon(Icons.delete),
+                                onPressed: () {
+                                  _deleteReview(review.id);
+                                },
+                              ),
+                            ],
+                          )
+                              : null,
+                        ),
+                      );
+                    },
+                  );
                 },
               ),
             ],
           ),
         ),
       ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => ReviewPage(restaurant: restaurant),
+            ),
+          );
+        },
+        child: const Icon(Icons.add),
+      ),
     );
   }
 
-  Widget _buildInfoRow({required IconData icon, required String label, required String value}) {
+  Widget _buildInfoRow({
+    required IconData icon,
+    required String label,
+    required String value,
+  }) {
     return Row(
-      crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Icon(icon, color: TColor.primary),
         const SizedBox(width: 8),
         Expanded(
-          flex: 1,
+          flex: 3,
           child: Text(
-            '$label: ',
+            label,
             style: TextStyle(
               fontSize: 16,
-              fontWeight: FontWeight.bold,
               color: TColor.primaryText,
             ),
           ),
@@ -253,5 +285,66 @@ class RestaurantPage extends StatelessWidget {
         ),
       ],
     );
+  }
+
+  void _showEditReviewDialog(BuildContext context, DocumentSnapshot review) {
+    TextEditingController commentController = TextEditingController(text: review['comment']);
+    TextEditingController ratingController = TextEditingController(text: review['rating'].toString());
+
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text('Edit Review'),
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              TextField(
+                controller: commentController,
+                decoration: const InputDecoration(labelText: 'Comment'),
+              ),
+              TextField(
+                controller: ratingController,
+                decoration: const InputDecoration(labelText: 'Rating'),
+                keyboardType: TextInputType.number,
+              ),
+            ],
+          ),
+          actions: <Widget>[
+            TextButton(
+              child: const Text('Cancel'),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+            TextButton(
+              child: const Text('Save'),
+              onPressed: () {
+                FirebaseFirestore.instance
+                    .collection('restaurants')
+                    .doc(restaurant.id)
+                    .collection('reviews')
+                    .doc(review.id)
+                    .update({
+                  'comment': commentController.text,
+                  'rating': double.parse(ratingController.text),
+                  'timestamp': Timestamp.now(),
+                });
+                Navigator.of(context).pop();
+              },
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  void _deleteReview(String reviewId) {
+    FirebaseFirestore.instance
+        .collection('restaurants')
+        .doc(restaurant.id)
+        .collection('reviews')
+        .doc(reviewId)
+        .delete();
   }
 }

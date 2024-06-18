@@ -30,7 +30,7 @@ class _ReviewPageState extends State<ReviewPage> {
     }
   }
 
-    Future<void> _fetchUserName() async {
+  Future<void> _fetchUserName() async {
     try {
       DocumentSnapshot userDoc = await FirebaseFirestore.instance
           .collection('users')
@@ -43,11 +43,11 @@ class _ReviewPageState extends State<ReviewPage> {
           usernameController.text = data['username'] ?? '';
           isLoading = false;
         });
-      } else  {
-        debugPrint('User document does not exist'); 
+      } else {
+        debugPrint('User document does not exist');
         setState(() {
           isLoading = false;
-          });
+        });
       }
     } catch (e) {
       debugPrint('Error fetching user data: $e');
@@ -60,8 +60,12 @@ class _ReviewPageState extends State<ReviewPage> {
   Future<void> _addReview() async {
     if (_formKey.currentState!.validate()) {
       try {
-        await FirebaseFirestore.instance.collection('restaurants').doc(widget.restaurant.id).collection('reviews').add({
-          'reviewerName': usernameController.text, 
+        await FirebaseFirestore.instance
+            .collection('restaurants')
+            .doc(widget.restaurant.id)
+            .collection('reviews')
+            .add({
+          'reviewerName': usernameController.text,
           'comment': _commentController.text,
           'rating': _rating,
           'timestamp': FieldValue.serverTimestamp(),

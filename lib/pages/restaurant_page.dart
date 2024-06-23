@@ -12,6 +12,16 @@ class RestaurantPage extends StatelessWidget {
 
   const RestaurantPage({super.key, required this.restaurant});
 
+  Future<bool> _isAdmin() async {
+    String currentUserId = FirebaseAuth.instance.currentUser!.uid;
+    DocumentSnapshot userSnapshot = await FirebaseFirestore.instance.collection('users').doc(currentUserId).get();
+    if (userSnapshot.exists) {
+      Map<String, dynamic>? userData = userSnapshot.data() as Map<String, dynamic>?;
+      return userData != null && userData['role'] == 'admin';
+    }
+    return false;
+  }
+
   @override
   Widget build(BuildContext context) {
     String currentUserId = FirebaseAuth.instance.currentUser!.uid;
@@ -169,30 +179,43 @@ class RestaurantPage extends StatelessWidget {
                     ),
                   ),
                   const SizedBox(width: 10),
-                  ElevatedButton(
-                    onPressed: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => UpdateRestaurantPage(restaurant: restaurant),
-                        ),
-                      );
+                  FutureBuilder<bool>(
+                    future: _isAdmin(),
+                    builder: (context, snapshot) {
+                      if (snapshot.connectionState == ConnectionState.waiting) {
+                        return const CircularProgressIndicator();
+                      } else if (snapshot.hasError) {
+                        return const SizedBox(); // Handle error gracefully
+                      } else if (snapshot.data == true) {
+                        return ElevatedButton(
+                          onPressed: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => UpdateRestaurantPage(restaurant: restaurant),
+                              ),
+                            );
+                          },
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: TColor.primary,
+                            padding: const EdgeInsets.symmetric(vertical: 16),
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(8),
+                            ),
+                          ),
+                          child: const Text(
+                            'Update Restaurant',
+                            style: TextStyle(
+                              color: Colors.white,
+                              fontSize: 16,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                        );
+                      } else {
+                        return const SizedBox(); // Do not display anything if the user is not admin
+                      }
                     },
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: TColor.primary,
-                      padding: const EdgeInsets.symmetric(vertical: 16),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(8),
-                      ),
-                    ),
-                    child: const Text(
-                      'Update Restaurant',
-                      style: TextStyle(
-                        color: Colors.white,
-                        fontSize: 16,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
                   ),
                 ],
               ),

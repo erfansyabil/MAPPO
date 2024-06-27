@@ -164,9 +164,9 @@ class RestaurantPage extends StatelessWidget {
                     },
                     style: ElevatedButton.styleFrom(
                       backgroundColor: TColor.primary,
-                      padding: const EdgeInsets.symmetric(vertical: 16),
+                      padding: const EdgeInsets.symmetric(horizontal: 16),
                       shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(8),
+                        borderRadius: BorderRadius.circular(2),
                       ),
                     ),
                     child: const Text(
@@ -187,36 +187,61 @@ class RestaurantPage extends StatelessWidget {
                       } else if (snapshot.hasError) {
                         return const SizedBox(); // Handle error gracefully
                       } else if (snapshot.data == true) {
-                        return ElevatedButton(
-                          onPressed: () {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) => UpdateRestaurantPage(restaurant: restaurant),
+                        return Row(
+                          children: [
+                            ElevatedButton(
+                              onPressed: () {
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) => UpdateRestaurantPage(restaurant: restaurant),
+                                  ),
+                                );
+                              },
+                              style: ElevatedButton.styleFrom(
+                                backgroundColor: TColor.primary,
+                                padding: const EdgeInsets.symmetric(horizontal: 16),
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(2),
+                                ),
                               ),
-                            );
-                          },
-                          style: ElevatedButton.styleFrom(
-                            backgroundColor: TColor.primary,
-                            padding: const EdgeInsets.symmetric(vertical: 16),
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(8),
+                              child: const Text(
+                                'Update',
+                                style: TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
                             ),
-                          ),
-                          child: const Text(
-                            'Update Restaurant',
-                            style: TextStyle(
-                              color: Colors.white,
-                              fontSize: 16,
-                              fontWeight: FontWeight.bold,
+                            const SizedBox(width: 10),
+                            ElevatedButton(
+                              onPressed: () {
+                                _deleteRestaurant(context);
+                              },
+                              style: ElevatedButton.styleFrom(
+                                backgroundColor: Colors.red,
+                                padding: const EdgeInsets.symmetric(horizontal: 16),
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(2),
+                                ),
+                              ),
+                              child: const Text(
+                                'Delete',
+                                style: TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
                             ),
-                          ),
+                          ],
                         );
                       } else {
                         return const SizedBox(); // Do not display anything if the user is not admin
                       }
                     },
-                  ),
+                  )
                 ],
               ),
               const SizedBox(height: 16),
@@ -427,4 +452,38 @@ class RestaurantPage extends StatelessWidget {
         .doc(reviewId)
         .delete();
   }
+
+  void _deleteRestaurant(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text('Delete Restaurant'),
+          content: const Text('Are you sure you want to delete this restaurant? This action cannot be undone.'),
+          actions: <Widget>[
+            TextButton(
+              child: const Text('Cancel'),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+            TextButton(
+              child: const Text('Delete'),
+              onPressed: () {
+                FirebaseFirestore.instance
+                    .collection('restaurants')
+                    .doc(restaurant.id)
+                    .delete()
+                    .then((_) {
+                      Navigator.of(context).pop();
+                      Navigator.of(context).pop(); // Navigate back to the previous screen
+                    });
+              },
+            ),
+          ],
+        );
+      },
+    );
+  }
 }
+

@@ -108,17 +108,6 @@ class NavBarAdmin extends StatelessWidget {
                   },
                 ),
                 ListTile(
-                  leading: const Icon(Icons.delete),
-                  title: const Text('Delete Restaurant'),
-                  onTap: () {
-                    Navigator.pop(context); // Close the drawer and navigate
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(builder: (context) => const DeleteRestaurantPage()),
-                    );
-                  },
-                ),
-                ListTile(
                   leading: const Icon(Icons.logout),
                   title: const Text('Log Out'),
                   onTap: () {

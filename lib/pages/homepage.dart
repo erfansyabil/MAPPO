@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:mappo/pages/navbar.dart';
-import 'package:mappo/common/color_extension.dart';
 import 'package:mappo/common_widget/round_textfield.dart';
 import 'package:mappo/common_widget/popular_restaurant_row.dart';
 import 'package:mappo/common_widget/view_all_title_row.dart';

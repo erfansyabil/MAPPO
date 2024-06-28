@@ -43,6 +43,28 @@ class _AdminHomePageState extends State<AdminHomePage> {
     });
   }
 
+  Future<Map<String, dynamic>> _fetchRatings(String restaurantId) async {
+    QuerySnapshot reviewSnapshot = await FirebaseFirestore.instance
+        .collection('restaurants')
+        .doc(restaurantId)
+        .collection('reviews')
+        .get();
+
+    int totalReviews = reviewSnapshot.docs.length;
+    double totalRating = 0.0;
+
+    for (var doc in reviewSnapshot.docs) {
+      totalRating += doc['rating'] ?? 0.0;
+    }
+
+    double averageRating = totalReviews > 0 ? totalRating / totalReviews : 0.0;
+
+    return {
+      'averageRating': averageRating,
+      'totalReviews': totalReviews,
+    };
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -90,15 +112,51 @@ class _AdminHomePageState extends State<AdminHomePage> {
                     itemCount: popArr.length,
                     itemBuilder: ((context, index) {
                       var pObj = popArr[index];
-                      return PopularRestaurantRow(
-                        pObj: pObj,
-                        onTap: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => RestaurantPage(restaurant: pObj),
-                            ),
-                          );
+                      return FutureBuilder<Map<String, dynamic>>(
+                        future: _fetchRatings(pObj.id),
+                        builder: (context, snapshot) {
+                          if (snapshot.connectionState == ConnectionState.waiting) {
+                            return PopularRestaurantRow(
+                              pObj: pObj,
+                              onTap: () {
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) => RestaurantPage(restaurant: pObj),
+                                  ),
+                                );
+                              },
+                            );
+                          } else if (snapshot.hasError) {
+                            return PopularRestaurantRow(
+                              pObj: pObj,
+                              onTap: () {
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) => RestaurantPage(restaurant: pObj),
+                                  ),
+                                );
+                              },
+                            );
+                          } else {
+                            double averageRating = snapshot.data?['averageRating'] ?? 0.0;
+                            int totalReviews = snapshot.data?['totalReviews'] ?? 0;
+
+                            return PopularRestaurantRow(
+                              pObj: pObj,
+                              averageRating: averageRating,
+                              totalReviews: totalReviews,
+                              onTap: () {
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) => RestaurantPage(restaurant: pObj),
+                                  ),
+                                );
+                              },
+                            );
+                          }
                         },
                       );
                     }),

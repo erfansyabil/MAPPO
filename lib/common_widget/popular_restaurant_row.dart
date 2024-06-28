@@ -5,8 +5,10 @@ import 'package:mappo/pages/classes.dart';
 class PopularRestaurantRow extends StatelessWidget {
   final Restaurant pObj;
   final VoidCallback onTap;
+  final double? averageRating;
+  final int? totalReviews;
 
-  const PopularRestaurantRow({super.key, required this.pObj, required this.onTap});
+  const PopularRestaurantRow({super.key, required this.pObj, required this.onTap, this.averageRating, this.totalReviews,});
 
   @override
   Widget build(BuildContext context) {
@@ -48,7 +50,7 @@ class PopularRestaurantRow extends StatelessWidget {
                       ),
                       const SizedBox(width: 4),
                       Text(
-                        pObj.rate,
+                        averageRating != null ? averageRating!.toStringAsFixed(1) : pObj.rate,
                         style: TextStyle(
                           color: TColor.primary,
                           fontSize: 11,
@@ -56,7 +58,7 @@ class PopularRestaurantRow extends StatelessWidget {
                       ),
                       const SizedBox(width: 8),
                       Text(
-                        "(${pObj.rating} Ratings)",
+                        "(${totalReviews ?? pObj.rating} Ratings)",
                         style: TextStyle(
                           color: TColor.secondaryText,
                           fontSize: 11,

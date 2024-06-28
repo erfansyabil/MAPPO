@@ -383,17 +383,6 @@ class RestaurantPage extends StatelessWidget {
           ),
         ),
       ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          Navigator.push(
-            context,
-            MaterialPageRoute(
-              builder: (context) => ReviewPage(restaurant: restaurant),
-            ),
-          );
-        },
-        child: const Icon(Icons.add),
-      ),
     );
   }
 

@@ -82,8 +82,6 @@ class _AddRestaurantPageState extends State<AddRestaurantPage> {
         _addressController.text.isEmpty ||
         _foodTypeController.text.isEmpty ||
         _restaurantTypeController.text.isEmpty ||
-        _rateController.text.isEmpty ||
-        _ratingController.text.isEmpty ||
         _image == null) {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text('Please fill all the fields and select an image')),
@@ -111,8 +109,6 @@ class _AddRestaurantPageState extends State<AddRestaurantPage> {
         'foodType': _foodTypeController.text,
         'restaurantType': _restaurantTypeController.text,
         'image': imageUrl,
-        'rate': _rateController.text,
-        'rating': _ratingController.text,
       });
       
       if (!mounted) return;
@@ -214,20 +210,6 @@ class _AddRestaurantPageState extends State<AddRestaurantPage> {
                         padding: const EdgeInsets.symmetric(vertical: 10),
                         child: Image.file(_image!, height: 150),
                       ),
-                    const SizedBox(height: 10),
-                    MyTextField(
-                      controller: _rateController,
-                      hintText: "Rate",
-                      obscureText: false,
-                      icon: const Icon(Icons.star),
-                    ),
-                    const SizedBox(height: 10),
-                    MyTextField(
-                      controller: _ratingController,
-                      hintText: "Rating",
-                      obscureText: false,
-                      icon: const Icon(Icons.rate_review),
-                    ),
                     const SizedBox(height: 20),
                     MyButton(
                       onTap: _addRestaurant,

@@ -22,6 +22,28 @@ class RestaurantPage extends StatelessWidget {
     return false;
   }
 
+  Future<Map<String, dynamic>> _fetchRatings() async {
+    QuerySnapshot reviewSnapshot = await FirebaseFirestore.instance
+        .collection('restaurants')
+        .doc(restaurant.id)
+        .collection('reviews')
+        .get();
+
+    int totalReviews = reviewSnapshot.docs.length;
+    double totalRating = 0.0;
+
+    for (var doc in reviewSnapshot.docs) {
+      totalRating += doc['rating'] ?? 0.0;
+    }
+
+    double averageRating = totalReviews > 0 ? totalRating / totalReviews : 0.0;
+
+    return {
+      'averageRating': averageRating,
+      'totalReviews': totalReviews,
+    };
+  }
+
   @override
   Widget build(BuildContext context) {
     String currentUserId = FirebaseAuth.instance.currentUser!.uid;
@@ -80,53 +102,67 @@ class RestaurantPage extends StatelessWidget {
                 ),
               ),
               const SizedBox(height: 8),
-              Row(
-                children: [
-                  Image.asset(
-                    "assets/img/rate.png",
-                    width: 10,
-                    height: 10,
-                    fit: BoxFit.cover,
-                  ),
-                  const SizedBox(width: 4),
-                  Text(
-                    restaurant.rate,
-                    style: TextStyle(
-                      color: TColor.primary,
-                      fontSize: 14,
-                    ),
-                  ),
-                  const SizedBox(width: 8),
-                  Text(
-                    "(${restaurant.rating} Ratings)",
-                    style: TextStyle(
-                      color: TColor.secondaryText,
-                      fontSize: 14,
-                    ),
-                  ),
-                  const SizedBox(width: 8),
-                  Text(
-                    restaurant.restaurantType,
-                    style: TextStyle(
-                      color: TColor.secondaryText,
-                      fontSize: 14,
-                    ),
-                  ),
-                  Text(
-                    " · ",
-                    style: TextStyle(
-                      color: TColor.primary,
-                      fontSize: 14,
-                    ),
-                  ),
-                  Text(
-                    restaurant.foodType,
-                    style: TextStyle(
-                      color: TColor.secondaryText,
-                      fontSize: 14,
-                    ),
-                  ),
-                ],
+              FutureBuilder<Map<String, dynamic>>(
+                future: _fetchRatings(),
+                builder: (context, snapshot) {
+                  if (snapshot.connectionState == ConnectionState.waiting) {
+                    return const CircularProgressIndicator();
+                  } else if (snapshot.hasError) {
+                    return Text('Error loading ratings: ${snapshot.error}');
+                  } else {
+                    double averageRating = snapshot.data?['averageRating'] ?? 0.0;
+                    int totalReviews = snapshot.data?['totalReviews'] ?? 0;
+
+                    return Row(
+                      children: [
+                        Image.asset(
+                          "assets/img/rate.png",
+                          width: 10,
+                          height: 10,
+                          fit: BoxFit.cover,
+                        ),
+                        const SizedBox(width: 4),
+                        Text(
+                          averageRating.toStringAsFixed(1),
+                          style: TextStyle(
+                            color: TColor.primary,
+                            fontSize: 14,
+                          ),
+                        ),
+                        const SizedBox(width: 8),
+                        Text(
+                          "($totalReviews Ratings)",
+                          style: TextStyle(
+                            color: TColor.secondaryText,
+                            fontSize: 14,
+                          ),
+                        ),
+                        const SizedBox(width: 8),
+                        Text(
+                          restaurant.restaurantType,
+                          style: TextStyle(
+                            color: TColor.secondaryText,
+                            fontSize: 14,
+                          ),
+                        ),
+                        Text(
+                          " · ",
+                          style: TextStyle(
+                            color: TColor.primary,
+                            fontSize: 14,
+                          ),
+                        ),
+                        Text(
+                          restaurant.foodType,
+                          style: TextStyle(
+                            color: TColor.secondaryText,
+                            fontSize: 14,
+                          ),
+                        ),
+                      ],
+                    );
+                  }
+                },
               ),
               const SizedBox(height: 16),
               Divider(color: TColor.secondaryText),
@@ -199,7 +235,7 @@ class RestaurantPage extends StatelessWidget {
                                 );
                               },
                               style: ElevatedButton.styleFrom(
-                                backgroundColor: TColor.primary,
+                                backgroundColor: Colors.blue,
                                 padding: const EdgeInsets.symmetric(horizontal: 16),
                                 shape: RoundedRectangleBorder(
                                   borderRadius: BorderRadius.circular(2),
@@ -277,7 +313,9 @@ class RestaurantPage extends StatelessWidget {
                       final reviewerName = review['reviewerName'] ?? 'Anonymous';
                       final comment = review['comment'];
                       final rating = review['rating'].toString();
-                      final timestamp = (review['timestamp'] as Timestamp).toDate();
+                      final timestamp = review['timestamp'] != null
+                          ? (review['timestamp'] as Timestamp).toDate()
+                          : DateTime.now();
                       final userId = review['userId'];
 
                       return Card(
@@ -316,7 +354,7 @@ class RestaurantPage extends StatelessWidget {
                               ),
                             ],
                           ),
-                          trailing: userId == currentUserId
+                          trailing: userId == currentUserId || snapshot.data == true
                               ? Row(
                             mainAxisSize: MainAxisSize.min,
                             children: [
@@ -329,7 +367,7 @@ class RestaurantPage extends StatelessWidget {
                               IconButton(
                                 icon: const Icon(Icons.delete),
                                 onPressed: () {
-                                  _deleteReview(review.id);
+                                  _showDeleteReviewDialog(context, review.id);
                                 },
                               ),
                             ],
@@ -444,13 +482,38 @@ class RestaurantPage extends StatelessWidget {
     );
   }
 
-  void _deleteReview(String reviewId) {
-    FirebaseFirestore.instance
-        .collection('restaurants')
-        .doc(restaurant.id)
-        .collection('reviews')
-        .doc(reviewId)
-        .delete();
+  void _showDeleteReviewDialog(BuildContext context, String reviewId) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text('Delete Review'),
+          content: const Text('Are you sure you want to delete this review? This action cannot be undone.'),
+          actions: <Widget>[
+            TextButton(
+              child: const Text('Cancel'),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+            TextButton(
+              child: const Text('Delete'),
+              onPressed: () {
+                FirebaseFirestore.instance
+                    .collection('restaurants')
+                    .doc(restaurant.id)
+                    .collection('reviews')
+                    .doc(reviewId)
+                    .delete()
+                    .then((_) {
+                      Navigator.of(context).pop();
+                    });
+              },
+            ),
+          ],
+        );
+      },
+    );
   }
 
   void _deleteRestaurant(BuildContext context) {

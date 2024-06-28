@@ -6,7 +6,6 @@ import 'package:mappo/pages/my_reviews.dart';
 import 'package:mappo/pages/profile.dart'; // Import your profile.dart file
 import 'package:mappo/pages/login.dart'; // Import the login page to navigate after logout
 import 'package:cloud_firestore/cloud_firestore.dart'; // Import Firestore
-import 'package:mappo/pages/delete_restaurant.dart'; // Import the delete restaurant page
 
 class NavBarAdmin extends StatelessWidget {
   const NavBarAdmin({super.key});

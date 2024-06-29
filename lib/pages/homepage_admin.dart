@@ -101,7 +101,7 @@ class _AdminHomePageState extends State<AdminHomePage> {
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 20),
                   child: RoundTextfield(
-                    hintText: "Search Food",
+                    hintText: "Search Restaurant",
                     controller: txtSearch,
                     onSubmitted: (query) {
                       _filterRestaurants(query);

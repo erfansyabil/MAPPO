@@ -9,6 +9,7 @@ class RoundTextfield extends StatelessWidget {
   final bool obscureText;
   final Color? bgColor;
   final Widget? left;
+  final Function(String)? onSubmitted;
 
   const RoundTextfield(
       {super.key,
@@ -17,7 +18,8 @@ class RoundTextfield extends StatelessWidget {
       this.keyboardType,
       this.bgColor,
       this.left,
-      this.obscureText = false});
+      this.obscureText = false,
+      this.onSubmitted,});
 
   @override
   Widget build(BuildContext context) {
@@ -50,6 +52,7 @@ class RoundTextfield extends StatelessWidget {
                     fontSize: 14,
                     fontWeight: FontWeight.w500),
               ),
+              onSubmitted: onSubmitted,
             ),
           ),
         ],

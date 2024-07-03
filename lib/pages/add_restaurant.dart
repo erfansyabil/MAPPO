@@ -21,8 +21,6 @@ class _AddRestaurantPageState extends State<AddRestaurantPage> {
   final TextEditingController _addressController = TextEditingController();
   final TextEditingController _foodTypeController = TextEditingController();
   final TextEditingController _restaurantTypeController = TextEditingController();
-  final TextEditingController _rateController = TextEditingController();
-  final TextEditingController _ratingController = TextEditingController();
 
   File? _image;
   final ImagePicker _picker = ImagePicker();
@@ -30,7 +28,7 @@ class _AddRestaurantPageState extends State<AddRestaurantPage> {
 
   Future<void> _pickImage() async {
     // Request storage permission
-    var status = await Permission.storage.request();
+    var status = await Permission.manageExternalStorage.request();
     if (!status.isGranted) {
       // Permission denied, handle the situation accordingly
       // For example, show a message to inform the user why the permission is needed

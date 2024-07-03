@@ -24,9 +24,7 @@ class _UpdateRestaurantPageState extends State<UpdateRestaurantPage> {
   late TextEditingController _nameController;
   late TextEditingController _addressController;
   late TextEditingController _foodTypeController;
-  late TextEditingController _restaurantTypeController;
-  late TextEditingController _rateController;
-  late TextEditingController _ratingController;
+  late TextEditingController _restaurantTypeController
 
   File? _image;
   final ImagePicker _picker = ImagePicker();
@@ -40,8 +38,6 @@ class _UpdateRestaurantPageState extends State<UpdateRestaurantPage> {
     _addressController = TextEditingController(text: widget.restaurant.address);
     _foodTypeController = TextEditingController(text: widget.restaurant.foodType);
     _restaurantTypeController = TextEditingController(text: widget.restaurant.restaurantType);
-    _rateController = TextEditingController(text: widget.restaurant.rate);
-    _ratingController = TextEditingController(text: widget.restaurant.rating.toString());
   }
 
   Future<void> _pickImage() async {
@@ -92,9 +88,7 @@ class _UpdateRestaurantPageState extends State<UpdateRestaurantPage> {
     if (_nameController.text.isEmpty ||
         _addressController.text.isEmpty ||
         _foodTypeController.text.isEmpty ||
-        _restaurantTypeController.text.isEmpty ||
-        _rateController.text.isEmpty ||
-        _ratingController.text.isEmpty) {
+        _restaurantTypeController.text.isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text('Please fill all the fields')),
       );
@@ -123,8 +117,6 @@ class _UpdateRestaurantPageState extends State<UpdateRestaurantPage> {
         'address': _addressController.text,
         'foodType': _foodTypeController.text,
         'restaurantType': _restaurantTypeController.text,
-        'rate': _rateController.text,
-        'rating': _ratingController.text,
       };
 
       if (imageUrl != null) {
@@ -243,20 +235,6 @@ class _UpdateRestaurantPageState extends State<UpdateRestaurantPage> {
                         padding: const EdgeInsets.symmetric(vertical: 10),
                         child: Image.file(_image!, height: 150),
                       ),
-                    const SizedBox(height: 10),
-                    MyTextField(
-                      controller: _rateController,
-                      hintText: "Rate",
-                      obscureText: false,
-                      icon: const Icon(Icons.star),
-                    ),
-                    const SizedBox(height: 10),
-                    MyTextField(
-                      controller: _ratingController,
-                      hintText: "Rating",
-                      obscureText: false,
-                      icon: const Icon(Icons.rate_review),
-                    ),
                     const SizedBox(height: 20),
                     MyButton(
                       onTap: () {

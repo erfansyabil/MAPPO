@@ -24,7 +24,7 @@ class _UpdateRestaurantPageState extends State<UpdateRestaurantPage> {
   late TextEditingController _nameController;
   late TextEditingController _addressController;
   late TextEditingController _foodTypeController;
-  late TextEditingController _restaurantTypeController
+  late TextEditingController _restaurantTypeController;
 
   File? _image;
   final ImagePicker _picker = ImagePicker();
